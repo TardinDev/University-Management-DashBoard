@@ -12,7 +12,7 @@ import { Toaster } from "./components/refine-ui/notification/toaster";
 import { useNotificationProvider } from "./components/refine-ui/notification/use-notification-provider";
 import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
-import DashBoard from "./pages/dashBoard";
+import DashBoard from "./pages/DashBoard";
 import { Layout } from "./components/refine-ui/layout/layout";
 import { BookOpen, Home } from "lucide-react";
 import SubjectsList from "./pages/subjects/list";
