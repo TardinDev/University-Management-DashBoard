@@ -1,4 +1,4 @@
-import type { Subject, Student, Teacher, ScheduleEvent, Grade, DashboardStats } from "@/types";
+import type { Subject, Student, Teacher, ScheduleEvent, Grade, DashboardStats, Course, Announcement, Assignment, Submission } from "@/types";
 
 const MockSubjects: Subject[] = [
   { id: 1, code: "CS101", name: "Introduction à la Programmation", departement: "CS", description: "Cours fondamental couvrant les bases de la programmation avec Python, incluant les variables, boucles, fonctions et structures de données.", createdAt: "2025-01-15" },
@@ -168,4 +168,235 @@ const MockDashboardStats: DashboardStats = {
   ],
 };
 
-export { MockSubjects, MockStudents, MockTeachers, MockSchedule, MockGrades, MockDashboardStats };
+// Demo professor (id "2") = Jean Rakoto, Demo student (id "3") = Aina Rasoanirina
+const MockCourses: Course[] = [
+  {
+    id: "c1", name: "Introduction à la Programmation", code: "CS101",
+    description: "Cours fondamental couvrant les bases de la programmation avec Python.",
+    joinCode: "CS101AB", professorId: "2", departement: "CS", semester: "S1", createdAt: "2025-09-01",
+    professor: { id: "2", firstName: "Jean", lastName: "Rakoto", email: "jean.rakoto@univ.mg" },
+    enrollments: [
+      { id: "e1", student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", email: "aina.r@univ.mg", matricule: "ETU-2024-003" } },
+      { id: "e2", student: { id: "4", firstName: "Aïcha", lastName: "Traoré", email: "aicha.traore@univ.mg", matricule: "ETU-2024-004" } },
+      { id: "e3", student: { id: "7", firstName: "Moussa", lastName: "Koné", email: "moussa.kone@univ.mg", matricule: "ETU-2024-007" } },
+      { id: "e4", student: { id: "18", firstName: "Fanja", lastName: "Rasolofo", email: "fanja.rasolofo@univ.mg", matricule: "ETU-2024-018" } },
+    ],
+    _count: { enrollments: 4, assignments: 2, announcements: 3 },
+  },
+  {
+    id: "c2", name: "Structures de Données", code: "CS201",
+    description: "Étude des structures de données avancées : arbres, graphes, tables de hachage.",
+    joinCode: "CS201XY", professorId: "2", departement: "CS", semester: "S1", createdAt: "2025-09-01",
+    professor: { id: "2", firstName: "Jean", lastName: "Rakoto", email: "jean.rakoto@univ.mg" },
+    enrollments: [
+      { id: "e5", student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", email: "aina.r@univ.mg", matricule: "ETU-2024-003" } },
+      { id: "e6", student: { id: "1", firstName: "Amadou", lastName: "Diallo", email: "amadou.diallo@univ.mg", matricule: "ETU-2024-001" } },
+      { id: "e7", student: { id: "7", firstName: "Moussa", lastName: "Koné", email: "moussa.kone@univ.mg", matricule: "ETU-2024-007" } },
+    ],
+    _count: { enrollments: 3, assignments: 2, announcements: 2 },
+  },
+  {
+    id: "c3", name: "Bases de Données", code: "CS301",
+    description: "Conception et gestion de bases de données relationnelles, SQL avancé.",
+    joinCode: "CS301QR", professorId: "2", departement: "CS", semester: "S2", createdAt: "2025-09-15",
+    professor: { id: "2", firstName: "Jean", lastName: "Rakoto", email: "jean.rakoto@univ.mg" },
+    enrollments: [
+      { id: "e8", student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", email: "aina.r@univ.mg", matricule: "ETU-2024-003" } },
+      { id: "e9", student: { id: "4", firstName: "Aïcha", lastName: "Traoré", email: "aicha.traore@univ.mg", matricule: "ETU-2024-004" } },
+      { id: "e10", student: { id: "18", firstName: "Fanja", lastName: "Rasolofo", email: "fanja.rasolofo@univ.mg", matricule: "ETU-2024-018" } },
+      { id: "e11", student: { id: "25", firstName: "Cheikh", lastName: "Fall", email: "cheikh.fall@univ.mg", matricule: "ETU-2024-025" } },
+      { id: "e12", student: { id: "1", firstName: "Amadou", lastName: "Diallo", email: "amadou.diallo@univ.mg", matricule: "ETU-2024-001" } },
+    ],
+    _count: { enrollments: 5, assignments: 1, announcements: 1 },
+  },
+  {
+    id: "c4", name: "Intelligence Artificielle", code: "CS401",
+    description: "Introduction à l'IA : apprentissage automatique, réseaux de neurones.",
+    joinCode: "CS401AI", professorId: "2", departement: "CS", semester: "S2", createdAt: "2025-10-01",
+    professor: { id: "2", firstName: "Jean", lastName: "Rakoto", email: "jean.rakoto@univ.mg" },
+    enrollments: [
+      { id: "e13", student: { id: "7", firstName: "Moussa", lastName: "Koné", email: "moussa.kone@univ.mg", matricule: "ETU-2024-007" } },
+      { id: "e14", student: { id: "18", firstName: "Fanja", lastName: "Rasolofo", email: "fanja.rasolofo@univ.mg", matricule: "ETU-2024-018" } },
+      { id: "e15", student: { id: "25", firstName: "Cheikh", lastName: "Fall", email: "cheikh.fall@univ.mg", matricule: "ETU-2024-025" } },
+    ],
+    _count: { enrollments: 3, assignments: 1, announcements: 2 },
+  },
+  {
+    id: "c5", name: "Algèbre Linéaire", code: "MATH101",
+    description: "Espaces vectoriels, matrices, déterminants, valeurs propres.",
+    joinCode: "MAT1LN", professorId: "10", departement: "Math", semester: "S1", createdAt: "2025-09-01",
+    professor: { id: "10", firstName: "Brice", lastName: "Randrianasolo", email: "brice.randrianasolo@univ.mg" },
+    enrollments: [
+      { id: "e16", student: { id: "2", firstName: "Fatima", lastName: "Benali", email: "fatima.benali@univ.mg", matricule: "ETU-2024-002" } },
+      { id: "e17", student: { id: "8", firstName: "Hanta", lastName: "Razafi", email: "hanta.razafi@univ.mg", matricule: "ETU-2024-008" } },
+      { id: "e18", student: { id: "19", firstName: "Sékou", lastName: "Touré", email: "sekou.toure@univ.mg", matricule: "ETU-2024-019" } },
+    ],
+    _count: { enrollments: 3, assignments: 0, announcements: 0 },
+  },
+  {
+    id: "c6", name: "Mécanique Quantique", code: "PHY301",
+    description: "Dualité onde-particule, équation de Schrödinger et atome d'hydrogène.",
+    joinCode: "PHY3MQ", professorId: "11", departement: "Physics", semester: "S1", createdAt: "2025-09-01",
+    professor: { id: "11", firstName: "Claire", lastName: "Razafimahefa", email: "claire.razafimahefa@univ.mg" },
+    enrollments: [
+      { id: "e19", student: { id: "9", firstName: "Ibrahim", lastName: "Sy", email: "ibrahim.sy@univ.mg", matricule: "ETU-2024-009" } },
+      { id: "e20", student: { id: "15", firstName: "Youssouf", lastName: "Diarra", email: "youssouf.diarra@univ.mg", matricule: "ETU-2024-015" } },
+      { id: "e21", student: { id: "20", firstName: "Hasina", lastName: "Ramana", email: "hasina.ramana@univ.mg", matricule: "ETU-2024-020" } },
+    ],
+    _count: { enrollments: 3, assignments: 0, announcements: 0 },
+  },
+];
+
+const MockAnnouncements: Announcement[] = [
+  {
+    id: "a1", courseId: "c1", authorId: "2", content: "Bienvenue dans le cours d'Introduction à la Programmation ! Le premier TP aura lieu la semaine prochaine. Assurez-vous d'avoir installé Python 3.12 sur vos machines.",
+    createdAt: "2025-09-02T09:00:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a2", courseId: "c1", authorId: "2", content: "Rappel : l'examen partiel de programmation aura lieu le 15 novembre. Il portera sur les chapitres 1 à 5 (variables, boucles, fonctions, listes, dictionnaires).",
+    createdAt: "2025-10-28T14:30:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a3", courseId: "c1", authorId: "2", content: "Les notes du TP1 sont disponibles. La moyenne de la classe est de 14.2/20. Bon travail !",
+    createdAt: "2025-11-05T10:00:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a4", courseId: "c2", authorId: "2", content: "Le cours sur les arbres binaires est reporté au mercredi. Révisez les listes chaînées en attendant.",
+    createdAt: "2025-10-15T08:00:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a5", courseId: "c2", authorId: "2", content: "Nouveau support de cours disponible : 'Tables de hachage et résolution de collisions'. Consultez la section Travaux.",
+    createdAt: "2025-11-10T16:00:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a6", courseId: "c3", authorId: "2", content: "Installation de PostgreSQL obligatoire avant le prochain TP. Suivez le guide partagé par email.",
+    createdAt: "2025-10-01T09:00:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a7", courseId: "c4", authorId: "2", content: "Conférence invitée sur le Deep Learning ce vendredi à 14h en Amphi A. Présence fortement recommandée.",
+    createdAt: "2025-11-18T11:00:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+  {
+    id: "a8", courseId: "c4", authorId: "2", content: "Le projet final d'IA est à rendre pour le 20 décembre. Groupes de 2-3 étudiants. Sujets disponibles en section Travaux.",
+    createdAt: "2025-11-25T09:30:00Z",
+    author: { id: "2", firstName: "Jean", lastName: "Rakoto", role: "PROFESSOR" },
+  },
+];
+
+const MockAssignments: Assignment[] = [
+  {
+    id: "as1", courseId: "c1", title: "TP1 — Variables et boucles",
+    description: "Écrire un programme Python qui calcule la factorielle d'un nombre et affiche la table de multiplication.",
+    dueDate: "2025-10-15T23:59:00Z", points: 20, createdAt: "2025-09-20T08:00:00Z",
+    _count: { submissions: 4 },
+  },
+  {
+    id: "as2", courseId: "c1", title: "TP2 — Fonctions et listes",
+    description: "Implémenter les fonctions de tri (insertion, sélection) et une recherche dichotomique.",
+    dueDate: "2025-11-30T23:59:00Z", points: 20, createdAt: "2025-11-01T08:00:00Z",
+    _count: { submissions: 2 },
+  },
+  {
+    id: "as3", courseId: "c2", title: "TP — Listes chaînées",
+    description: "Implémenter une liste chaînée simple avec insertion, suppression et recherche.",
+    dueDate: "2025-10-25T23:59:00Z", points: 20, createdAt: "2025-10-05T08:00:00Z",
+    _count: { submissions: 3 },
+  },
+  {
+    id: "as4", courseId: "c2", title: "TP — Arbres binaires de recherche",
+    description: "Implémenter un ABR avec insertion, parcours (infixe, préfixe, postfixe) et suppression.",
+    dueDate: "2026-04-01T23:59:00Z", points: 25, createdAt: "2025-11-15T08:00:00Z",
+    _count: { submissions: 0 },
+  },
+  {
+    id: "as5", courseId: "c3", title: "TP — Requêtes SQL avancées",
+    description: "Écrire des requêtes avec jointures, sous-requêtes et fonctions d'agrégation sur la base universitaire.",
+    dueDate: "2025-11-20T23:59:00Z", points: 20, createdAt: "2025-10-20T08:00:00Z",
+    _count: { submissions: 3 },
+  },
+  {
+    id: "as6", courseId: "c4", title: "Projet — Classification d'images",
+    description: "Entraîner un réseau de neurones convolutif pour classifier des images CIFAR-10. Rapport + code à rendre.",
+    dueDate: "2026-05-20T23:59:00Z", points: 40, createdAt: "2025-11-25T08:00:00Z",
+    _count: { submissions: 1 },
+  },
+];
+
+const MockSubmissions: Submission[] = [
+  // Student demo (id "3") submissions
+  {
+    id: "s1", assignmentId: "as1", studentId: "3", content: "Voici mon code pour la factorielle et la table de multiplication.",
+    submittedAt: "2025-10-14T18:30:00Z", grade: 16, feedback: "Bon travail, code propre. Attention à la gestion des entrées négatives.",
+    student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", matricule: "ETU-2024-003" },
+  },
+  {
+    id: "s2", assignmentId: "as3", studentId: "3", content: "Implémentation de la liste chaînée avec tests unitaires.",
+    submittedAt: "2025-10-24T20:00:00Z", grade: 18, feedback: "Excellent ! Tests très complets.",
+    student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", matricule: "ETU-2024-003" },
+  },
+  {
+    id: "s3", assignmentId: "as5", studentId: "3", content: "Requêtes SQL avec jointures et agrégations.",
+    submittedAt: "2025-11-19T22:00:00Z", grade: 14, feedback: "Correct mais les sous-requêtes pourraient être optimisées.",
+    student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", matricule: "ETU-2024-003" },
+  },
+  // Other students
+  {
+    id: "s4", assignmentId: "as1", studentId: "4", content: "Programme factorielle et table de multiplication.",
+    submittedAt: "2025-10-15T10:00:00Z", grade: 14, feedback: "Bien mais manque de commentaires.",
+    student: { id: "4", firstName: "Aïcha", lastName: "Traoré", matricule: "ETU-2024-004" },
+  },
+  {
+    id: "s5", assignmentId: "as1", studentId: "7", content: "Factorielle récursive et itérative + table de multiplication.",
+    submittedAt: "2025-10-13T15:00:00Z", grade: 19, feedback: "Travail remarquable, approche récursive très bien maîtrisée.",
+    student: { id: "7", firstName: "Moussa", lastName: "Koné", matricule: "ETU-2024-007" },
+  },
+  {
+    id: "s6", assignmentId: "as1", studentId: "18", content: "Mon programme Python pour le TP1.",
+    submittedAt: "2025-10-15T22:45:00Z",
+    student: { id: "18", firstName: "Fanja", lastName: "Rasolofo", matricule: "ETU-2024-018" },
+  },
+  {
+    id: "s7", assignmentId: "as3", studentId: "1", content: "Liste chaînée en C avec allocation dynamique.",
+    submittedAt: "2025-10-25T08:00:00Z", grade: 15, feedback: "Bien. Pensez à libérer la mémoire.",
+    student: { id: "1", firstName: "Amadou", lastName: "Diallo", matricule: "ETU-2024-001" },
+  },
+  {
+    id: "s8", assignmentId: "as3", studentId: "7", content: "Liste chaînée avec itérateur personnalisé.",
+    submittedAt: "2025-10-23T14:00:00Z",
+    student: { id: "7", firstName: "Moussa", lastName: "Koné", matricule: "ETU-2024-007" },
+  },
+  {
+    id: "s9", assignmentId: "as2", studentId: "3", content: "Implémentation des algorithmes de tri et recherche dichotomique.",
+    submittedAt: "2025-11-28T16:00:00Z",
+    student: { id: "3", firstName: "Aina", lastName: "Rasoanirina", matricule: "ETU-2024-003" },
+  },
+  {
+    id: "s10", assignmentId: "as2", studentId: "7", content: "Tri par insertion, sélection et recherche dichotomique avec complexité.",
+    submittedAt: "2025-11-29T09:00:00Z", grade: 17, feedback: "Analyse de complexité bien faite.",
+    student: { id: "7", firstName: "Moussa", lastName: "Koné", matricule: "ETU-2024-007" },
+  },
+  {
+    id: "s11", assignmentId: "as5", studentId: "4", content: "Mes requêtes SQL pour le TP bases de données.",
+    submittedAt: "2025-11-20T12:00:00Z",
+    student: { id: "4", firstName: "Aïcha", lastName: "Traoré", matricule: "ETU-2024-004" },
+  },
+  {
+    id: "s12", assignmentId: "as5", studentId: "1", content: "Requêtes SQL avec jointures complexes.",
+    submittedAt: "2025-11-18T20:00:00Z", grade: 16, feedback: "Très bonnes jointures, bien structuré.",
+    student: { id: "1", firstName: "Amadou", lastName: "Diallo", matricule: "ETU-2024-001" },
+  },
+  {
+    id: "s13", assignmentId: "as6", studentId: "7", content: "Classification CIFAR-10 avec CNN — accuracy 87%.",
+    submittedAt: "2026-01-15T18:00:00Z",
+    student: { id: "7", firstName: "Moussa", lastName: "Koné", matricule: "ETU-2024-007" },
+  },
+];
+
+export { MockSubjects, MockStudents, MockTeachers, MockSchedule, MockGrades, MockDashboardStats, MockCourses, MockAnnouncements, MockAssignments, MockSubmissions };

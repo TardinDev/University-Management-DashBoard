@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { useGo, useNotification } from "@refinedev/core";
+import { useGetIdentity, useGo, useNotification } from "@refinedev/core";
 import { ArrowLeft, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { AnimatedPage } from "@/components/ui/animated-page";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+import { MockCourses } from "@/components/constants/Mock-Data";
+import type { UserIdentity } from "@/types";
 
 export default function JoinCourse() {
   const go = useGo();
   const { open } = useNotification();
+  const { data: user } = useGetIdentity<UserIdentity>();
   const [joinCode, setJoinCode] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,23 +22,42 @@ export default function JoinCourse() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/courses/join`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ joinCode: joinCode.trim().toUpperCase() }),
-      });
+      const code = joinCode.trim().toUpperCase();
+      const course = MockCourses.find((c) => c.joinCode === code);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        open?.({ type: "success", message: "Inscrit avec succès !" });
-        go({ to: `/courses/${data.courseId}` });
-      } else {
-        open?.({ type: "error", message: data.message || "Code invalide" });
+      if (!course) {
+        open?.({ type: "error", message: "Code invalide ou cours introuvable" });
+        return;
       }
-    } catch {
-      open?.({ type: "error", message: "Erreur de connexion" });
+
+      // Check if already enrolled
+      const alreadyEnrolled = course.enrollments?.some(
+        (e) => String(e.student.id) === String(user?.id),
+      );
+      if (alreadyEnrolled) {
+        open?.({ type: "error", message: "Vous êtes déjà inscrit à ce cours" });
+        go({ to: `/courses/${course.id}` });
+        return;
+      }
+
+      // Add enrollment in-memory
+      if (user) {
+        const enrollment = {
+          id: `e-join-${Date.now()}`,
+          student: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          },
+        };
+        if (!course.enrollments) course.enrollments = [];
+        course.enrollments.push(enrollment);
+        course._count.enrollments = course.enrollments.length;
+      }
+
+      open?.({ type: "success", message: "Inscrit avec succès !" });
+      go({ to: `/courses/${course.id}` });
     } finally {
       setLoading(false);
     }
@@ -69,7 +89,7 @@ export default function JoinCourse() {
                   id="joinCode"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-                  placeholder="Ex: A820060"
+                  placeholder="Ex: CS101AB"
                   className="text-center text-lg font-mono tracking-widest"
                   maxLength={7}
                   required
