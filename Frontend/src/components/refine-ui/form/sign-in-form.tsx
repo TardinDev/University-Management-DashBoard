@@ -41,10 +41,8 @@ export const SignInForm = () => {
     });
   };
 
-  const quickLogin = (email: string, password: string) => {
-    setEmail(email);
-    setPassword(password);
-    login({ email, password });
+  const quickLogin = (role: string) => {
+    login({ role });
   };
 
   return (
@@ -163,7 +161,7 @@ export const SignInForm = () => {
               <Button
                 variant="outline"
                 className={cn("flex", "flex-col", "items-center", "gap-1", "h-auto", "py-3", "border-red-200", "hover:bg-red-50", "dark:border-red-800", "dark:hover:bg-red-950")}
-                onClick={() => quickLogin("admin@univ.mg", "admin123")}
+                onClick={() => quickLogin("ADMIN")}
                 type="button"
               >
                 <Shield className={cn("h-5", "w-5", "text-red-600", "dark:text-red-400")} />
@@ -172,7 +170,7 @@ export const SignInForm = () => {
               <Button
                 variant="outline"
                 className={cn("flex", "flex-col", "items-center", "gap-1", "h-auto", "py-3", "border-blue-200", "hover:bg-blue-50", "dark:border-blue-800", "dark:hover:bg-blue-950")}
-                onClick={() => quickLogin("jean.rakoto@univ.mg", "prof123")}
+                onClick={() => quickLogin("PROFESSOR")}
                 type="button"
               >
                 <GraduationCap className={cn("h-5", "w-5", "text-blue-600", "dark:text-blue-400")} />
@@ -181,7 +179,7 @@ export const SignInForm = () => {
               <Button
                 variant="outline"
                 className={cn("flex", "flex-col", "items-center", "gap-1", "h-auto", "py-3", "border-green-200", "hover:bg-green-50", "dark:border-green-800", "dark:hover:bg-green-950")}
-                onClick={() => quickLogin("aina.r@univ.mg", "student123")}
+                onClick={() => quickLogin("STUDENT")}
                 type="button"
               >
                 <BookOpen className={cn("h-5", "w-5", "text-green-600", "dark:text-green-400")} />
