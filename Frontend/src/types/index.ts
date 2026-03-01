@@ -68,6 +68,103 @@ export type Grade = {
   academicYear: string;
 };
 
+export type UserIdentity = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  email: string;
+  role: "ADMIN" | "PROFESSOR" | "STUDENT";
+  avatar?: string;
+};
+
+export type Course = {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+  coverImage?: string;
+  joinCode: string;
+  professorId: string;
+  departement: string;
+  semester: string;
+  section?: string;
+  createdAt: string;
+  professor: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    email?: string;
+  };
+  enrollments?: Array<{
+    id: string;
+    student: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      avatar?: string;
+      email?: string;
+      matricule?: string;
+    };
+  }>;
+  _count: {
+    enrollments: number;
+    assignments: number;
+    announcements: number;
+  };
+};
+
+export type Assignment = {
+  id: string;
+  courseId: string;
+  title: string;
+  description?: string;
+  dueDate?: string;
+  points?: number;
+  attachments?: Array<{ url: string; filename: string; type: string }>;
+  createdAt: string;
+  course?: { id: string; name: string; code: string; professorId?: string };
+  submissions?: Submission[];
+  _count?: { submissions: number };
+};
+
+export type Submission = {
+  id: string;
+  assignmentId: string;
+  studentId: string;
+  content?: string;
+  attachments?: Array<{ url: string; filename: string; type: string }>;
+  grade?: number;
+  feedback?: string;
+  submittedAt: string;
+  student?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    matricule?: string;
+    avatar?: string;
+  };
+  assignment?: { id: string; title: string; points?: number; courseId?: string };
+};
+
+export type Announcement = {
+  id: string;
+  courseId: string;
+  authorId: string;
+  content: string;
+  attachments?: Array<{ url: string; filename: string; type: string }>;
+  createdAt: string;
+  author: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    role: string;
+  };
+  course?: { id: string; name: string; code: string };
+};
+
 export type DashboardStats = {
   totalStudents: number;
   totalTeachers: number;

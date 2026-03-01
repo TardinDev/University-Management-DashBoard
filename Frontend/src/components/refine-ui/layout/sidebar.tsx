@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import {
+  useGetIdentity,
   useLink,
   useMenu,
   useRefineOptions,
@@ -30,9 +31,26 @@ import {
 import { ChevronRight, ListIcon } from "lucide-react";
 import React from "react";
 
+type UserIdentity = { id: string; role: "ADMIN" | "PROFESSOR" | "STUDENT" };
+
+// Resources visible per role
+const ROLE_RESOURCES: Record<string, string[]> = {
+  ADMIN: ["dashboard", "courses", "students", "teachers", "subjects", "schedule", "grades"],
+  PROFESSOR: ["dashboard", "courses"],
+  STUDENT: ["dashboard", "courses"],
+};
+
 export function Sidebar() {
   const { open } = useShadcnSidebar();
   const { menuItems, selectedKey } = useMenu();
+  const { data: identity } = useGetIdentity<UserIdentity>();
+
+  const role = identity?.role || "STUDENT";
+  const allowedResources = ROLE_RESOURCES[role] || ROLE_RESOURCES.STUDENT;
+
+  const filteredItems = menuItems.filter((item: TreeMenuItem) =>
+    allowedResources.includes(item.name)
+  );
 
   return (
     <ShadcnSidebar collapsible="icon" className={cn("border-none")}>
@@ -55,7 +73,7 @@ export function Sidebar() {
           }
         )}
       >
-        {menuItems.map((item: TreeMenuItem) => (
+        {filteredItems.map((item: TreeMenuItem) => (
           <SidebarItem
             key={item.key || item.name}
             item={item}
