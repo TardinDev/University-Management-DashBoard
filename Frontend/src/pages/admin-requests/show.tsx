@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { AITextHelper } from "@/components/ai-text-helper";
 import { Separator } from "@/components/ui/separator";
 import {
   Select,
@@ -190,10 +190,11 @@ export default function AdminRequestShow() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="response">Réponse</Label>
-                    <Textarea
+                    <AITextHelper
                       id="response"
                       value={responseText}
-                      onChange={(e) => setResponseText(e.target.value)}
+                      onValueChange={setResponseText}
+                      context="admin-response"
                       placeholder="Rédigez votre réponse..."
                       rows={5}
                     />

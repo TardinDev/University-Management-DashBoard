@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Textarea } from "@/components/ui/textarea";
+import { AITextHelper } from "@/components/ai-text-helper";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -148,7 +148,7 @@ function FluxTab({ courseId, isProfOrAdmin }: { courseId: string; isProfOrAdmin:
       {isProfOrAdmin && (
         <Card>
           <CardContent className="pt-4">
-            <Textarea placeholder="Publier une annonce..." value={newContent} onChange={(e) => setNewContent(e.target.value)} rows={3} />
+            <AITextHelper placeholder="Publier une annonce..." value={newContent} onValueChange={setNewContent} context="announcement" rows={3} />
             <div className="flex justify-end mt-2">
               <Button onClick={handlePost} disabled={!newContent.trim()} size="sm">
                 <Send className="h-4 w-4 mr-2" />Publier
@@ -216,7 +216,7 @@ function TravauxTab({ courseId, isProfOrAdmin, identity }: { courseId: string; i
           <CardContent>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="space-y-2"><Label>Titre</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} required /></div>
-              <div className="space-y-2"><Label>Description</Label><Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} /></div>
+              <div className="space-y-2"><Label>Description</Label><AITextHelper value={description} onValueChange={setDescription} context="assignment" rows={3} /></div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2"><Label>Date limite</Label><Input type="datetime-local" value={dueDate} onChange={(e) => setDueDate(e.target.value)} /></div>
                 <div className="space-y-2"><Label>Points</Label><Input type="number" value={points} onChange={(e) => setPoints(e.target.value)} placeholder="20" /></div>
@@ -294,7 +294,7 @@ function AssignmentCard({ assignment, isProfOrAdmin, identity }: { assignment: A
             {!isProfOrAdmin && !mySubmission && (
               <div className="space-y-2">
                 <Label>Votre travail</Label>
-                <Textarea value={submissionContent} onChange={(e) => setSubmissionContent(e.target.value)} placeholder="Ecrivez votre reponse..." rows={4} />
+                <AITextHelper value={submissionContent} onValueChange={setSubmissionContent} context="assignment" placeholder="Ecrivez votre reponse..." rows={4} />
                 <div className="flex justify-end"><Button size="sm" onClick={handleSubmit}><Send className="h-4 w-4 mr-2" />Soumettre</Button></div>
               </div>
             )}
@@ -385,7 +385,7 @@ function ResourcesTab({ courseId, courseName, isProfOrAdmin }: { courseId: strin
           <CardContent>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="space-y-2"><Label>Titre</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} required /></div>
-              <div className="space-y-2"><Label>Description</Label><Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} /></div>
+              <div className="space-y-2"><Label>Description</Label><AITextHelper value={description} onValueChange={setDescription} context="resource" rows={2} /></div>
               <div className="space-y-2"><Label>Type de fichier</Label><Input value={fileType} onChange={(e) => setFileType(e.target.value)} placeholder="pdf, pptx, docx..." /></div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setShowForm(false)}>Annuler</Button>
@@ -470,7 +470,7 @@ function ForumTab({ courseId, courseName }: { courseId: string; courseName: stri
           <CardContent>
             <form onSubmit={handleNewTopic} className="space-y-4">
               <div className="space-y-2"><Label>Titre</Label><Input value={topicTitle} onChange={(e) => setTopicTitle(e.target.value)} required /></div>
-              <div className="space-y-2"><Label>Message</Label><Textarea value={topicContent} onChange={(e) => setTopicContent(e.target.value)} rows={3} required /></div>
+              <div className="space-y-2"><Label>Message</Label><AITextHelper value={topicContent} onValueChange={setTopicContent} context="forum" rows={3} required /></div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setShowNewTopic(false)}>Annuler</Button>
                 <Button type="submit">Publier</Button>

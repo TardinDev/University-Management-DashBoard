@@ -4,7 +4,7 @@ import { ArrowLeft, Plus, Trash2, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { AITextHelper } from "@/components/ai-text-helper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -151,10 +151,11 @@ export default function QuizzesCreate() {
 
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
-                <Textarea
+                <AITextHelper
                   id="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onValueChange={setDescription}
+                  context="quiz"
                   placeholder="Instructions pour les &eacute;tudiants..."
                   rows={2}
                 />
@@ -233,9 +234,10 @@ export default function QuizzesCreate() {
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label>&Eacute;nonc&eacute;</Label>
-                    <Textarea
+                    <AITextHelper
                       value={q.question}
-                      onChange={(e) => updateQuestion(qIndex, "question", e.target.value)}
+                      onValueChange={(val) => updateQuestion(qIndex, "question", val)}
+                      context="quiz"
                       placeholder="Posez votre question..."
                       rows={2}
                       required

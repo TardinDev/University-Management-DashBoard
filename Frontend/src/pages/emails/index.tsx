@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { AITextHelper } from "@/components/ai-text-helper";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedPage } from "@/components/ui/animated-page";
@@ -107,11 +107,12 @@ export default function EmailsPage() {
             </div>
             <div className="space-y-2">
               <Label>Contenu</Label>
-              <Textarea
+              <AITextHelper
                 placeholder="Redigez votre message..."
                 rows={5}
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onValueChange={setContent}
+                context="email"
                 required
               />
             </div>
