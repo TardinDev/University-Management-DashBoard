@@ -9,6 +9,7 @@ import { AnimatedCard } from "@/components/ui/animated-card";
 import { SubjectGradesTable } from "./components/subject-grades-table";
 import { StudentBulletin } from "./components/student-bulletin";
 import { GradeDistributionChart } from "../dashboard/components/grade-distribution-chart";
+import { TranscriptGenerator } from "@/components/transcript-generator";
 import { motion } from "motion/react";
 import { containerVariants } from "@/lib/animations";
 import { useState } from "react";
@@ -124,7 +125,12 @@ const GradesPage = () => {
             </div>
 
             {matchedStudent ? (
-              <StudentBulletin student={matchedStudent} grades={studentGrades} />
+              <div className="space-y-4">
+                <div className="flex justify-end">
+                  <TranscriptGenerator student={matchedStudent} grades={studentGrades} />
+                </div>
+                <StudentBulletin student={matchedStudent} grades={studentGrades} />
+              </div>
             ) : studentSearch.trim() ? (
               <Card>
                 <CardContent className="py-12 text-center text-muted-foreground">

@@ -1,4 +1,4 @@
-import type { Subject, Student, Teacher, ScheduleEvent, Grade, DashboardStats, Course, Announcement, Assignment, Submission } from "@/types";
+import type { Subject, Student, Teacher, ScheduleEvent, Grade, DashboardStats, Course, Announcement, Assignment, Submission, AcademicYear, Department, Program, Group, AuditLog, Room, Message, Exam, AdminRequest, Attendance, Resource, ForumPost, Quiz, QuizAttempt, Portfolio, JuryDeliberation, ECTSRecord } from "@/types";
 
 const MockSubjects: Subject[] = [
   { id: 1, code: "CS101", name: "Introduction à la Programmation", departement: "CS", description: "Cours fondamental couvrant les bases de la programmation avec Python, incluant les variables, boucles, fonctions et structures de données.", createdAt: "2025-01-15" },
@@ -399,4 +399,302 @@ const MockSubmissions: Submission[] = [
   },
 ];
 
-export { MockSubjects, MockStudents, MockTeachers, MockSchedule, MockGrades, MockDashboardStats, MockCourses, MockAnnouncements, MockAssignments, MockSubmissions };
+// ============================================================
+// NEW MOCK DATA
+// ============================================================
+
+const MockAcademicYears: AcademicYear[] = [
+  { id: 1, name: "2023-2024", startDate: "2023-09-01", endDate: "2024-06-30", isCurrent: false },
+  { id: 2, name: "2024-2025", startDate: "2024-09-01", endDate: "2025-06-30", isCurrent: false },
+  { id: 3, name: "2025-2026", startDate: "2025-09-01", endDate: "2026-06-30", isCurrent: true },
+  { id: 4, name: "2026-2027", startDate: "2026-09-01", endDate: "2027-06-30", isCurrent: false },
+];
+
+const MockDepartments: Department[] = [
+  { id: 1, name: "Informatique", code: "CS", description: "Département d'informatique et sciences du numérique", headId: 1, headName: "Pr. Andry Rajoelina" },
+  { id: 2, name: "Mathématiques", code: "Math", description: "Département de mathématiques pures et appliquées", headId: 7, headName: "Pr. Gisèle Rabemananjara" },
+  { id: 3, name: "Physique", code: "Physics", description: "Département de physique fondamentale et appliquée", headId: 3, headName: "Pr. Claire Razafimahefa" },
+  { id: 4, name: "Chimie", code: "Chemistry", description: "Département de chimie générale et organique", headId: 5, headName: "Dr. Emma Ratsimba" },
+  { id: 5, name: "Biologie", code: "Biology", description: "Département de biologie et sciences de la vie", headId: 11, headName: "Dr. Ketaka Raveloson" },
+];
+
+const MockPrograms: Program[] = [
+  { id: 1, name: "Licence Informatique", code: "L-INFO", departmentId: 1, departmentName: "Informatique", level: "Licence", description: "Formation en informatique couvrant programmation, algorithmique, bases de données et réseaux." },
+  { id: 2, name: "Master Informatique", code: "M-INFO", departmentId: 1, departmentName: "Informatique", level: "Master", description: "Spécialisation en IA, génie logiciel ou cybersécurité avec stage en entreprise." },
+  { id: 3, name: "Licence Mathématiques", code: "L-MATH", departmentId: 2, departmentName: "Mathématiques", level: "Licence", description: "Formation en algèbre, analyse, probabilités et statistiques." },
+  { id: 4, name: "Master Mathématiques Appliquées", code: "M-MATH", departmentId: 2, departmentName: "Mathématiques", level: "Master", description: "Modélisation mathématique, calcul scientifique et data science." },
+  { id: 5, name: "Licence Physique", code: "L-PHY", departmentId: 3, departmentName: "Physique", level: "Licence", description: "Formation en mécanique, électromagnétisme, optique et physique quantique." },
+  { id: 6, name: "Licence Chimie", code: "L-CHIM", departmentId: 4, departmentName: "Chimie", level: "Licence", description: "Formation en chimie générale, organique, analytique et biochimie." },
+  { id: 7, name: "Licence Biologie", code: "L-BIO", departmentId: 5, departmentName: "Biologie", level: "Licence", description: "Formation en biologie cellulaire, écologie, génétique et microbiologie." },
+  { id: 8, name: "Master Physique", code: "M-PHY", departmentId: 3, departmentName: "Physique", level: "Master", description: "Recherche en physique théorique ou physique des matériaux." },
+];
+
+const MockGroups: Group[] = [
+  { id: 1, name: "TD-CS101-A", type: "TD", courseId: "c1", courseName: "Introduction à la Programmation", professorId: 1, professorName: "Pr. Rajoelina", students: ["3", "4", "7"] },
+  { id: 2, name: "TP-CS101-A", type: "TP", courseId: "c1", courseName: "Introduction à la Programmation", professorId: 4, professorName: "M. Rakotobe", students: ["3", "4"] },
+  { id: 3, name: "TP-CS101-B", type: "TP", courseId: "c1", courseName: "Introduction à la Programmation", professorId: 4, professorName: "M. Rakotobe", students: ["7", "18"] },
+  { id: 4, name: "TD-CS201-A", type: "TD", courseId: "c2", courseName: "Structures de Données", professorId: 1, professorName: "Pr. Rajoelina", students: ["3", "1", "7"] },
+  { id: 5, name: "TP-CS201-A", type: "TP", courseId: "c2", courseName: "Structures de Données", professorId: 4, professorName: "M. Rakotobe", students: ["3", "1", "7"] },
+  { id: 6, name: "TD-CS301-A", type: "TD", courseId: "c3", courseName: "Bases de Données", professorId: 12, professorName: "M. Andrianaivo", students: ["3", "4", "18", "25", "1"] },
+  { id: 7, name: "TP-CS301-A", type: "TP", courseId: "c3", courseName: "Bases de Données", professorId: 12, professorName: "M. Andrianaivo", students: ["3", "4", "18"] },
+  { id: 8, name: "TP-CS301-B", type: "TP", courseId: "c3", courseName: "Bases de Données", professorId: 12, professorName: "M. Andrianaivo", students: ["25", "1"] },
+];
+
+const MockAuditLogs: AuditLog[] = [
+  { id: 1, userId: 1, userName: "Admin Système", action: "CREATE", resource: "User", resourceId: "25", details: "Création du compte étudiant Cheikh Fall", createdAt: "2026-02-28T10:15:00Z" },
+  { id: 2, userId: 1, userName: "Admin Système", action: "UPDATE", resource: "Course", resourceId: "c4", details: "Modification de la description du cours CS401", createdAt: "2026-02-27T14:30:00Z" },
+  { id: 3, userId: 2, userName: "Jean Rakoto", action: "CREATE", resource: "Assignment", resourceId: "as6", details: "Création du projet Classification d'images pour CS401", createdAt: "2026-02-26T09:00:00Z" },
+  { id: 4, userId: 1, userName: "Admin Système", action: "DELETE", resource: "User", resourceId: "99", details: "Suppression du compte test temporaire", createdAt: "2026-02-25T16:45:00Z" },
+  { id: 5, userId: 10, userName: "Brice Randrianasolo", action: "UPDATE", resource: "Grade", resourceId: "4", details: "Mise à jour de la note d'Algèbre Linéaire pour Fatima Benali", createdAt: "2026-02-24T11:20:00Z" },
+  { id: 6, userId: 1, userName: "Admin Système", action: "UPDATE", resource: "Schedule", resourceId: "16", details: "Ajout du cours CS301 le samedi matin", createdAt: "2026-02-23T08:00:00Z" },
+  { id: 7, userId: 3, userName: "Aina Rasoanirina", action: "CREATE", resource: "Submission", resourceId: "s3", details: "Soumission du TP SQL avancé pour CS301", createdAt: "2026-02-22T22:00:00Z" },
+  { id: 8, userId: 11, userName: "Claire Razafimahefa", action: "CREATE", resource: "Announcement", resourceId: "a9", details: "Publication d'une annonce pour PHY301", createdAt: "2026-02-21T13:00:00Z" },
+  { id: 9, userId: 1, userName: "Admin Système", action: "UPDATE", resource: "Department", resourceId: "1", details: "Mise à jour du responsable du département CS", createdAt: "2026-02-20T10:00:00Z" },
+  { id: 10, userId: 2, userName: "Jean Rakoto", action: "UPDATE", resource: "Submission", resourceId: "s5", details: "Notation de la soumission de Moussa Koné (19/20)", createdAt: "2026-02-19T15:30:00Z" },
+];
+
+const MockRooms: Room[] = [
+  { id: 1, name: "Amphi A", capacity: 300, type: "Amphi", building: "Bâtiment Principal", equipment: ["Vidéoprojecteur", "Microphone", "Tableau blanc"], status: "Disponible" },
+  { id: 2, name: "Amphi B", capacity: 250, type: "Amphi", building: "Bâtiment Principal", equipment: ["Vidéoprojecteur", "Microphone", "Tableau interactif"], status: "Disponible" },
+  { id: 3, name: "Amphi C", capacity: 200, type: "Amphi", building: "Bâtiment Sciences", equipment: ["Vidéoprojecteur", "Microphone"], status: "Occupée" },
+  { id: 4, name: "Salle 102", capacity: 40, type: "Salle", building: "Bâtiment Principal", equipment: ["Vidéoprojecteur", "Tableau blanc"], status: "Disponible" },
+  { id: 5, name: "Salle 201", capacity: 35, type: "Salle", building: "Bâtiment Principal", equipment: ["Vidéoprojecteur", "Tableau blanc"], status: "Disponible" },
+  { id: 6, name: "Salle Info 1", capacity: 30, type: "Salle", building: "Bâtiment Informatique", equipment: ["30 PC", "Vidéoprojecteur", "Réseau filaire"], status: "Occupée" },
+  { id: 7, name: "Salle Info 2", capacity: 25, type: "Salle", building: "Bâtiment Informatique", equipment: ["25 PC", "Vidéoprojecteur", "Réseau filaire"], status: "Disponible" },
+  { id: 8, name: "Labo Physique", capacity: 20, type: "Labo", building: "Bâtiment Sciences", equipment: ["Oscilloscopes", "Multimètres", "Générateurs"], status: "Disponible" },
+  { id: 9, name: "Labo Chimie", capacity: 20, type: "Labo", building: "Bâtiment Sciences", equipment: ["Hottes aspirantes", "Verrerie", "Balances de précision"], status: "Maintenance" },
+  { id: 10, name: "Labo Bio", capacity: 20, type: "Labo", building: "Bâtiment Sciences", equipment: ["Microscopes", "Centrifugeuses", "Autoclaves"], status: "Disponible" },
+];
+
+const MockMessages: Message[] = [
+  { id: 1, senderId: "2", senderName: "Jean Rakoto", senderRole: "PROFESSOR", receiverId: "3", receiverName: "Aina Rasoanirina", subject: "Votre soumission TP1", content: "Bonjour Aina, votre travail sur le TP1 est excellent. J'aimerais vous proposer de présenter votre solution en classe.", read: true, createdAt: "2026-02-20T09:30:00Z" },
+  { id: 2, senderId: "3", senderName: "Aina Rasoanirina", senderRole: "STUDENT", receiverId: "2", receiverName: "Jean Rakoto", subject: "Re: Votre soumission TP1", content: "Merci beaucoup Professeur ! Ce serait un honneur de présenter mon travail devant la classe.", read: true, createdAt: "2026-02-20T14:15:00Z" },
+  { id: 3, senderId: "1", senderName: "Admin Système", senderRole: "ADMIN", receiverId: "2", receiverName: "Jean Rakoto", subject: "Réunion pédagogique", content: "Cher Professeur, une réunion pédagogique est prévue le 15 mars à 10h en salle de conférences. Votre présence est requise.", read: false, createdAt: "2026-03-01T08:00:00Z" },
+  { id: 4, senderId: "7", senderName: "Moussa Koné", senderRole: "STUDENT", receiverId: "2", receiverName: "Jean Rakoto", subject: "Question sur le projet IA", content: "Bonjour Professeur, est-il possible d'utiliser PyTorch au lieu de TensorFlow pour le projet de classification d'images ?", read: true, createdAt: "2026-02-25T16:00:00Z" },
+  { id: 5, senderId: "2", senderName: "Jean Rakoto", senderRole: "PROFESSOR", receiverId: "7", receiverName: "Moussa Koné", subject: "Re: Question sur le projet IA", content: "Oui Moussa, vous pouvez utiliser PyTorch. L'important est la qualité du modèle et du rapport.", read: true, createdAt: "2026-02-25T18:30:00Z" },
+  { id: 6, senderId: "3", senderName: "Aina Rasoanirina", senderRole: "STUDENT", receiverId: "1", receiverName: "Admin Système", subject: "Demande de relevé de notes", content: "Bonjour, je souhaite obtenir un relevé de notes officiel pour une candidature en master. Pouvez-vous m'indiquer la procédure ?", read: false, createdAt: "2026-03-02T10:00:00Z" },
+  { id: 7, senderId: "10", senderName: "Brice Randrianasolo", senderRole: "PROFESSOR", receiverId: "2", receiverName: "Jean Rakoto", subject: "Collaboration inter-départements", content: "Bonjour Jean, seriez-vous intéressé par un cours commun Math/Info sur la data science le semestre prochain ?", read: false, createdAt: "2026-03-03T11:00:00Z" },
+  { id: 8, senderId: "18", senderName: "Fanja Rasolofo", senderRole: "STUDENT", receiverId: "2", receiverName: "Jean Rakoto", subject: "Absence justifiée", content: "Bonjour Professeur, je serai absente au cours de lundi pour raison médicale. Je fournirai un certificat.", read: true, createdAt: "2026-03-04T07:30:00Z" },
+];
+
+const MockExams: Exam[] = [
+  { id: 1, courseId: "c1", courseName: "Introduction à la Programmation", roomId: 1, roomName: "Amphi A", date: "2026-01-15", startTime: "08:00", endTime: "10:00", type: "Partiel", semester: "S1" },
+  { id: 2, courseId: "c2", courseName: "Structures de Données", roomId: 2, roomName: "Amphi B", date: "2026-01-16", startTime: "10:00", endTime: "12:00", type: "Partiel", semester: "S1" },
+  { id: 3, courseId: "c5", courseName: "Algèbre Linéaire", roomId: 1, roomName: "Amphi A", date: "2026-01-17", startTime: "08:00", endTime: "10:00", type: "Partiel", semester: "S1" },
+  { id: 4, courseId: "c6", courseName: "Mécanique Quantique", roomId: 3, roomName: "Amphi C", date: "2026-01-18", startTime: "14:00", endTime: "17:00", type: "Partiel", semester: "S1" },
+  { id: 5, courseId: "c1", courseName: "Introduction à la Programmation", roomId: 1, roomName: "Amphi A", date: "2026-05-20", startTime: "08:00", endTime: "11:00", type: "Final", semester: "S1" },
+  { id: 6, courseId: "c3", courseName: "Bases de Données", roomId: 2, roomName: "Amphi B", date: "2026-05-21", startTime: "08:00", endTime: "11:00", type: "Final", semester: "S2" },
+  { id: 7, courseId: "c4", courseName: "Intelligence Artificielle", roomId: 3, roomName: "Amphi C", date: "2026-05-22", startTime: "14:00", endTime: "17:00", type: "Final", semester: "S2" },
+  { id: 8, courseId: "c2", courseName: "Structures de Données", roomId: 1, roomName: "Amphi A", date: "2026-06-15", startTime: "08:00", endTime: "10:00", type: "Rattrapage", semester: "S1" },
+  { id: 9, courseId: "c6", courseName: "Mécanique Quantique", roomId: 3, roomName: "Amphi C", date: "2026-06-16", startTime: "10:00", endTime: "13:00", type: "Rattrapage", semester: "S1" },
+];
+
+const MockAdminRequests: AdminRequest[] = [
+  { id: 1, studentId: "3", studentName: "Aina Rasoanirina", studentMatricule: "ETU-2024-003", type: "Relevé de notes", subject: "Demande de relevé officiel", description: "Demande de relevé de notes officiel pour candidature en master à l'étranger.", status: "Approuvée", response: "Relevé disponible au secrétariat à partir du 10 mars.", createdAt: "2026-02-15T10:00:00Z", updatedAt: "2026-02-18T14:00:00Z" },
+  { id: 2, studentId: "4", studentName: "Aïcha Traoré", studentMatricule: "ETU-2024-004", type: "Changement de groupe", subject: "Transfert de groupe TP", description: "Je souhaite passer du groupe TP-B au groupe TP-A pour des raisons d'emploi du temps.", status: "En attente", createdAt: "2026-03-01T09:00:00Z", updatedAt: "2026-03-01T09:00:00Z" },
+  { id: 3, studentId: "9", studentName: "Ibrahim Sy", studentMatricule: "ETU-2024-009", type: "Rattrapage", subject: "Demande de session de rattrapage", description: "Demande de rattrapage pour Mécanique Quantique suite à une absence justifiée lors du partiel.", status: "En cours", createdAt: "2026-02-20T11:30:00Z", updatedAt: "2026-02-22T10:00:00Z" },
+  { id: 4, studentId: "14", studentName: "Lalao Raharison", studentMatricule: "ETU-2024-014", type: "Réinscription", subject: "Demande de réinscription", description: "Suite à ma suspension, je demande ma réinscription pour le semestre prochain.", status: "En attente", createdAt: "2026-03-02T08:00:00Z", updatedAt: "2026-03-02T08:00:00Z" },
+  { id: 5, studentId: "1", studentName: "Amadou Diallo", studentMatricule: "ETU-2024-001", type: "Attestation", subject: "Attestation de scolarité", description: "Besoin d'une attestation de scolarité pour une demande de bourse.", status: "Approuvée", response: "Attestation prête, veuillez passer au bureau de la scolarité.", createdAt: "2026-02-10T14:00:00Z", updatedAt: "2026-02-12T09:00:00Z" },
+  { id: 6, studentId: "7", studentName: "Moussa Koné", studentMatricule: "ETU-2024-007", type: "Convention de stage", subject: "Convention de stage M1", description: "Demande de convention de stage pour un stage en entreprise de 3 mois chez Pulse Technologies.", status: "Approuvée", response: "Convention signée et disponible au secrétariat.", createdAt: "2026-01-25T10:00:00Z", updatedAt: "2026-02-01T16:00:00Z" },
+  { id: 7, studentId: "21", studentName: "Mamadou Camara", studentMatricule: "ETU-2024-021", type: "Contestation de note", subject: "Contestation note Structures de Données", description: "Je conteste ma note de 6/20 au partiel de Structures de Données. Je pense qu'il y a eu une erreur de correction.", status: "Rejetée", response: "Après vérification, la note est confirmée. La copie peut être consultée au secrétariat.", createdAt: "2026-02-05T09:00:00Z", updatedAt: "2026-02-10T14:00:00Z" },
+  { id: 8, studentId: "18", studentName: "Fanja Rasolofo", studentMatricule: "ETU-2024-018", type: "Dispense", subject: "Dispense d'assiduité partielle", description: "Demande de dispense d'assiduité pour le cours du lundi matin (raison professionnelle).", status: "En cours", createdAt: "2026-02-28T08:30:00Z", updatedAt: "2026-03-01T10:00:00Z" },
+];
+
+const MockAttendances: Attendance[] = [
+  { id: 1, courseId: "c1", courseName: "Introduction à la Programmation", studentId: "3", studentName: "Aina Rasoanirina", studentMatricule: "ETU-2024-003", date: "2026-03-03", status: "Présent", sessionType: "CM" },
+  { id: 2, courseId: "c1", courseName: "Introduction à la Programmation", studentId: "4", studentName: "Aïcha Traoré", studentMatricule: "ETU-2024-004", date: "2026-03-03", status: "Présent", sessionType: "CM" },
+  { id: 3, courseId: "c1", courseName: "Introduction à la Programmation", studentId: "7", studentName: "Moussa Koné", studentMatricule: "ETU-2024-007", date: "2026-03-03", status: "Retard", sessionType: "CM" },
+  { id: 4, courseId: "c1", courseName: "Introduction à la Programmation", studentId: "18", studentName: "Fanja Rasolofo", studentMatricule: "ETU-2024-018", date: "2026-03-03", status: "Absent", sessionType: "CM" },
+  { id: 5, courseId: "c2", courseName: "Structures de Données", studentId: "3", studentName: "Aina Rasoanirina", studentMatricule: "ETU-2024-003", date: "2026-03-04", status: "Présent", sessionType: "TD" },
+  { id: 6, courseId: "c2", courseName: "Structures de Données", studentId: "1", studentName: "Amadou Diallo", studentMatricule: "ETU-2024-001", date: "2026-03-04", status: "Présent", sessionType: "TD" },
+  { id: 7, courseId: "c2", courseName: "Structures de Données", studentId: "7", studentName: "Moussa Koné", studentMatricule: "ETU-2024-007", date: "2026-03-04", status: "Présent", sessionType: "TD" },
+  { id: 8, courseId: "c3", courseName: "Bases de Données", studentId: "3", studentName: "Aina Rasoanirina", studentMatricule: "ETU-2024-003", date: "2026-03-05", status: "Présent", sessionType: "TP" },
+  { id: 9, courseId: "c3", courseName: "Bases de Données", studentId: "25", studentName: "Cheikh Fall", studentMatricule: "ETU-2024-025", date: "2026-03-05", status: "Absent", sessionType: "TP" },
+  { id: 10, courseId: "c6", courseName: "Mécanique Quantique", studentId: "9", studentName: "Ibrahim Sy", studentMatricule: "ETU-2024-009", date: "2026-03-03", status: "Absent", sessionType: "CM" },
+];
+
+const MockResources: Resource[] = [
+  { id: 1, courseId: "c1", courseName: "Introduction à la Programmation", title: "Chapitre 1 — Variables et types", description: "Support de cours sur les variables, types de données et opérateurs en Python.", fileUrl: "/uploads/cs101_ch1.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-09-05T08:00:00Z" },
+  { id: 2, courseId: "c1", courseName: "Introduction à la Programmation", title: "Chapitre 2 — Boucles et conditions", description: "Structures de contrôle : if/else, for, while avec exercices corrigés.", fileUrl: "/uploads/cs101_ch2.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-09-15T08:00:00Z" },
+  { id: 3, courseId: "c2", courseName: "Structures de Données", title: "Cours — Listes chaînées", description: "Implémentation et complexité des listes chaînées simples et doublement chaînées.", fileUrl: "/uploads/cs201_listes.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-10-01T08:00:00Z" },
+  { id: 4, courseId: "c2", courseName: "Structures de Données", title: "Cours — Tables de hachage", description: "Tables de hachage, fonctions de hachage et résolution de collisions.", fileUrl: "/uploads/cs201_hash.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-11-10T08:00:00Z" },
+  { id: 5, courseId: "c3", courseName: "Bases de Données", title: "Guide PostgreSQL", description: "Guide d'installation et prise en main de PostgreSQL sur Ubuntu et macOS.", fileUrl: "/uploads/cs301_pg_guide.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-09-20T08:00:00Z" },
+  { id: 6, courseId: "c3", courseName: "Bases de Données", title: "Schéma ER — Base universitaire", description: "Diagramme entité-relation de la base de données utilisée pour les TP.", fileUrl: "/uploads/cs301_er_diagram.png", fileType: "image", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-10-15T08:00:00Z" },
+  { id: 7, courseId: "c4", courseName: "Intelligence Artificielle", title: "Introduction au Deep Learning", description: "Slides de la conférence invitée sur les réseaux de neurones profonds.", fileUrl: "/uploads/cs401_dl_slides.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-11-20T08:00:00Z" },
+  { id: 8, courseId: "c4", courseName: "Intelligence Artificielle", title: "Dataset CIFAR-10 — Instructions", description: "Instructions pour télécharger et préparer le dataset CIFAR-10 pour le projet.", fileUrl: "/uploads/cs401_cifar_instructions.pdf", fileType: "pdf", uploadedById: "2", uploadedByName: "Jean Rakoto", createdAt: "2025-11-25T08:00:00Z" },
+];
+
+const MockForumPosts: ForumPost[] = [
+  {
+    id: 1, courseId: "c1", courseName: "Introduction à la Programmation", authorId: "3", authorName: "Aina Rasoanirina", authorRole: "STUDENT",
+    title: "Question sur les dictionnaires", content: "Bonjour, quelle est la différence entre un dictionnaire et une liste en Python ? Quand utiliser l'un plutôt que l'autre ?",
+    createdAt: "2026-02-15T14:00:00Z",
+    replies: [
+      { id: 2, courseId: "c1", authorId: "7", authorName: "Moussa Koné", authorRole: "STUDENT", content: "Un dictionnaire utilise des clés pour accéder aux valeurs, alors qu'une liste utilise des indices. Utilise un dict quand tu as besoin d'accéder par nom/clé.", createdAt: "2026-02-15T15:30:00Z" },
+      { id: 3, courseId: "c1", authorId: "2", authorName: "Jean Rakoto", authorRole: "PROFESSOR", content: "Bonne question ! En résumé : liste = collection ordonnée, dictionnaire = collection de paires clé-valeur. Le dictionnaire offre un accès O(1) par clé.", createdAt: "2026-02-15T17:00:00Z" },
+    ],
+  },
+  {
+    id: 4, courseId: "c2", courseName: "Structures de Données", authorId: "1", authorName: "Amadou Diallo", authorRole: "STUDENT",
+    title: "Erreur de segmentation — liste chaînée", content: "J'obtiens une erreur de segmentation quand je supprime le dernier élément de ma liste chaînée. Quelqu'un a une idée ?",
+    createdAt: "2026-02-20T10:00:00Z",
+    replies: [
+      { id: 5, courseId: "c2", authorId: "3", authorName: "Aina Rasoanirina", authorRole: "STUDENT", content: "Vérifie que tu mets bien le pointeur next du noeud précédent à NULL après suppression.", createdAt: "2026-02-20T11:00:00Z" },
+      { id: 6, courseId: "c2", authorId: "2", authorName: "Jean Rakoto", authorRole: "PROFESSOR", content: "En effet, n'oubliez pas de gérer le cas où le noeud à supprimer est le dernier. Vérifiez aussi que vous libérez la mémoire correctement.", createdAt: "2026-02-20T14:00:00Z" },
+    ],
+  },
+  {
+    id: 7, courseId: "c3", courseName: "Bases de Données", authorId: "4", authorName: "Aïcha Traoré", authorRole: "STUDENT",
+    title: "JOIN vs sous-requête", content: "Pour le TP, est-ce qu'on peut utiliser des sous-requêtes au lieu de JOIN ? Lequel est plus performant ?",
+    createdAt: "2026-02-22T09:00:00Z",
+    replies: [
+      { id: 8, courseId: "c3", authorId: "2", authorName: "Jean Rakoto", authorRole: "PROFESSOR", content: "Les deux approches sont acceptées. En général, les JOIN sont plus performants car le moteur SQL les optimise mieux. Mais pour certaines requêtes, les sous-requêtes sont plus lisibles.", createdAt: "2026-02-22T11:00:00Z" },
+    ],
+  },
+  {
+    id: 9, courseId: "c4", courseName: "Intelligence Artificielle", authorId: "7", authorName: "Moussa Koné", authorRole: "STUDENT",
+    title: "GPU requis pour le projet ?", content: "Faut-il obligatoirement un GPU pour entraîner le modèle CNN sur CIFAR-10 ? Mon laptop n'a pas de carte graphique dédiée.",
+    createdAt: "2026-02-28T16:00:00Z",
+    replies: [
+      { id: 10, courseId: "c4", authorId: "2", authorName: "Jean Rakoto", authorRole: "PROFESSOR", content: "Non, ce n'est pas obligatoire. Vous pouvez utiliser Google Colab gratuitement qui offre un GPU. Sinon un CPU suffit avec un modèle plus petit et moins d'epochs.", createdAt: "2026-02-28T18:00:00Z" },
+      { id: 11, courseId: "c4", authorId: "25", authorName: "Cheikh Fall", authorRole: "STUDENT", content: "Je confirme, Google Colab marche très bien pour ce type de projet.", createdAt: "2026-03-01T08:00:00Z" },
+    ],
+  },
+  {
+    id: 12, courseId: "c1", courseName: "Introduction à la Programmation", authorId: "4", authorName: "Aïcha Traoré", authorRole: "STUDENT",
+    title: "Ressources supplémentaires Python", content: "Est-ce que quelqu'un a des recommandations de livres ou sites pour approfondir Python ?",
+    createdAt: "2026-03-01T10:00:00Z",
+    replies: [
+      { id: 13, courseId: "c1", authorId: "18", authorName: "Fanja Rasolofo", authorRole: "STUDENT", content: "Je recommande 'Automate the Boring Stuff with Python' — c'est gratuit en ligne et très pratique.", createdAt: "2026-03-01T12:00:00Z" },
+    ],
+  },
+];
+
+const MockQuizzes: Quiz[] = [
+  {
+    id: 1, courseId: "c1", courseName: "Introduction à la Programmation",
+    title: "Quiz — Variables et types Python", description: "Quiz rapide pour tester vos connaissances sur les variables et types de données en Python.",
+    dueDate: "2026-03-15T23:59:00Z", duration: 20, createdAt: "2026-03-01T08:00:00Z",
+    questions: [
+      { id: 1, question: "Quel est le type de la valeur 3.14 en Python ?", options: ["int", "float", "str", "complex"], correctIndex: 1, points: 2 },
+      { id: 2, question: "Quelle fonction permet de connaître le type d'une variable ?", options: ["typeof()", "type()", "isinstance()", "class()"], correctIndex: 1, points: 2 },
+      { id: 3, question: "Quel est le résultat de 10 // 3 en Python ?", options: ["3.33", "3", "4", "3.0"], correctIndex: 1, points: 3 },
+      { id: 4, question: "Comment déclarer une chaîne de caractères multiligne ?", options: ["Avec des guillemets simples", "Avec des guillemets doubles", "Avec des triples guillemets", "Ce n'est pas possible"], correctIndex: 2, points: 2 },
+      { id: 5, question: "Quelle est la valeur de bool('') en Python ?", options: ["True", "False", "None", "Erreur"], correctIndex: 1, points: 3 },
+    ],
+  },
+  {
+    id: 2, courseId: "c2", courseName: "Structures de Données",
+    title: "Quiz — Complexité algorithmique", description: "Testez vos connaissances sur la notation Big-O et la complexité des algorithmes.",
+    dueDate: "2026-03-20T23:59:00Z", duration: 15, createdAt: "2026-03-05T08:00:00Z",
+    questions: [
+      { id: 6, question: "Quelle est la complexité de la recherche dans une liste chaînée ?", options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"], correctIndex: 2, points: 3 },
+      { id: 7, question: "Quelle est la complexité de l'insertion en tête d'une liste chaînée ?", options: ["O(1)", "O(log n)", "O(n)", "O(n²)"], correctIndex: 0, points: 2 },
+      { id: 8, question: "Quel algorithme de tri a une complexité O(n log n) dans le pire cas ?", options: ["Quicksort", "Tri par insertion", "Tri fusion (Mergesort)", "Tri à bulles"], correctIndex: 2, points: 3 },
+      { id: 9, question: "Quelle structure de données offre un accès O(1) en moyenne par clé ?", options: ["Liste chaînée", "Arbre binaire", "Table de hachage", "Pile"], correctIndex: 2, points: 2 },
+    ],
+  },
+  {
+    id: 3, courseId: "c3", courseName: "Bases de Données",
+    title: "Quiz — SQL et modèle relationnel", description: "Évaluez vos connaissances en SQL et modélisation relationnelle.",
+    dueDate: "2026-03-25T23:59:00Z", duration: 25, createdAt: "2026-03-06T08:00:00Z",
+    questions: [
+      { id: 10, question: "Quelle commande SQL permet de supprimer une table ?", options: ["DELETE TABLE", "REMOVE TABLE", "DROP TABLE", "DESTROY TABLE"], correctIndex: 2, points: 2 },
+      { id: 11, question: "Quelle clause SQL est utilisée pour filtrer les groupes ?", options: ["WHERE", "HAVING", "FILTER", "GROUP BY"], correctIndex: 1, points: 3 },
+      { id: 12, question: "Quel type de jointure retourne toutes les lignes des deux tables ?", options: ["INNER JOIN", "LEFT JOIN", "RIGHT JOIN", "FULL OUTER JOIN"], correctIndex: 3, points: 3 },
+      { id: 13, question: "Quelle forme normale élimine les dépendances transitives ?", options: ["1NF", "2NF", "3NF", "BCNF"], correctIndex: 2, points: 2 },
+      { id: 14, question: "Quel mot-clé SQL permet d'éliminer les doublons ?", options: ["UNIQUE", "DISTINCT", "DIFFERENT", "NO DUPLICATE"], correctIndex: 1, points: 2 },
+    ],
+  },
+];
+
+const MockQuizAttempts: QuizAttempt[] = [
+  { id: 1, quizId: 1, quizTitle: "Quiz — Variables et types Python", studentId: "3", studentName: "Aina Rasoanirina", answers: [1, 1, 1, 2, 1], score: 12, maxScore: 12, submittedAt: "2026-03-10T14:30:00Z" },
+  { id: 2, quizId: 1, quizTitle: "Quiz — Variables et types Python", studentId: "4", studentName: "Aïcha Traoré", answers: [1, 1, 0, 2, 0], score: 7, maxScore: 12, submittedAt: "2026-03-11T09:15:00Z" },
+  { id: 3, quizId: 1, quizTitle: "Quiz — Variables et types Python", studentId: "7", studentName: "Moussa Koné", answers: [1, 1, 1, 2, 0], score: 9, maxScore: 12, submittedAt: "2026-03-10T16:00:00Z" },
+  { id: 4, quizId: 2, quizTitle: "Quiz — Complexité algorithmique", studentId: "3", studentName: "Aina Rasoanirina", answers: [2, 0, 2, 2], score: 10, maxScore: 10, submittedAt: "2026-03-15T10:00:00Z" },
+  { id: 5, quizId: 2, quizTitle: "Quiz — Complexité algorithmique", studentId: "1", studentName: "Amadou Diallo", answers: [2, 0, 1, 2], score: 7, maxScore: 10, submittedAt: "2026-03-16T11:00:00Z" },
+  { id: 6, quizId: 2, quizTitle: "Quiz — Complexité algorithmique", studentId: "7", studentName: "Moussa Koné", answers: [2, 0, 2, 1], score: 8, maxScore: 10, submittedAt: "2026-03-15T15:30:00Z" },
+];
+
+const MockPortfolios: Portfolio[] = [
+  {
+    id: 1, studentId: "3", title: "Portfolio de Aina Rasoanirina",
+    description: "Mes projets, compétences et expériences en informatique.",
+    items: [
+      { id: 1, title: "Site web de gestion de bibliothèque", description: "Application web full-stack avec React et Express pour gérer une bibliothèque universitaire.", type: "project", date: "2025-12-15", url: "https://github.com/aina-r/biblio-app", tags: ["React", "Express", "PostgreSQL", "TypeScript"] },
+      { id: 2, title: "Certificat Python — Coursera", description: "Certification 'Python for Everybody' délivrée par l'Université du Michigan via Coursera.", type: "certificate", date: "2025-06-20", url: "https://coursera.org/verify/abc123", tags: ["Python", "Coursera", "Certification"] },
+      { id: 3, title: "Stage — Pulse Technologies", description: "Stage de 2 mois en développement web. Travail sur une API REST et un dashboard admin.", type: "experience", date: "2025-07-01", tags: ["Stage", "API REST", "React", "Node.js"] },
+      { id: 4, title: "Compétences en bases de données", description: "Maîtrise de PostgreSQL, MySQL, MongoDB. Conception de schémas, optimisation de requêtes.", type: "skill", tags: ["PostgreSQL", "MySQL", "MongoDB", "SQL"] },
+      { id: 5, title: "Chatbot IA pour FAQ universitaire", description: "Prototype de chatbot utilisant GPT pour répondre aux questions fréquentes des étudiants.", type: "project", date: "2026-01-10", url: "https://github.com/aina-r/univ-chatbot", tags: ["Python", "IA", "NLP", "FastAPI"] },
+    ],
+  },
+  {
+    id: 2, studentId: "7", title: "Portfolio de Moussa Koné",
+    description: "Projets et réalisations en informatique et intelligence artificielle.",
+    items: [
+      { id: 6, title: "Classification d'images CIFAR-10", description: "Réseau de neurones convolutif atteignant 87% de précision sur CIFAR-10 avec PyTorch.", type: "project", date: "2026-01-15", url: "https://github.com/moussa-k/cifar10-cnn", tags: ["PyTorch", "CNN", "Deep Learning", "Python"] },
+      { id: 7, title: "Hackathon AntsiraHack 2025 — 2e place", description: "Développement d'une application de suivi de santé en 48h. Équipe de 3 personnes.", type: "experience", date: "2025-11-20", tags: ["Hackathon", "React Native", "Firebase", "Santé"] },
+      { id: 8, title: "Compétences en IA/ML", description: "Machine learning, deep learning, traitement du langage naturel, computer vision.", type: "skill", tags: ["TensorFlow", "PyTorch", "Scikit-learn", "NLP", "Computer Vision"] },
+    ],
+  },
+];
+
+const MockJuryDeliberations: JuryDeliberation[] = [
+  {
+    id: 1, academicYearId: 3, academicYearName: "2025-2026", departmentId: 1, departmentName: "Informatique",
+    level: "L3", date: "2026-06-25", status: "Planifié",
+    decisions: [
+      { studentId: 1, studentName: "Amadou Diallo", studentMatricule: "ETU-2024-001", average: 15.0, credits: 60, decision: "Admis" },
+      { studentId: 4, studentName: "Aïcha Traoré", studentMatricule: "ETU-2024-004", average: 16.5, credits: 60, decision: "Admis" },
+      { studentId: 10, studentName: "Noëlla Andriana", studentMatricule: "ETU-2024-010", average: 18.0, credits: 60, decision: "Admis" },
+      { studentId: 8, studentName: "Hanta Razafi", studentMatricule: "ETU-2024-008", average: 15.0, credits: 58, decision: "Admis" },
+      { studentId: 14, studentName: "Lalao Raharison", studentMatricule: "ETU-2024-014", average: 8.5, credits: 30, decision: "Redoublant" },
+      { studentId: 21, studentName: "Mamadou Camara", studentMatricule: "ETU-2024-021", average: 7.5, credits: 24, decision: "Ajourné" },
+    ],
+  },
+  {
+    id: 2, academicYearId: 2, academicYearName: "2024-2025", departmentId: 3, departmentName: "Physique",
+    level: "M1", date: "2025-06-28", status: "Terminé",
+    decisions: [
+      { studentId: 3, studentName: "Jean Rakoto", studentMatricule: "ETU-2024-003", average: 11.5, credits: 54, decision: "Admis" },
+      { studentId: 15, studentName: "Youssouf Diarra", studentMatricule: "ETU-2024-015", average: 13.0, credits: 58, decision: "Admis" },
+      { studentId: 20, studentName: "Hasina Ramana", studentMatricule: "ETU-2024-020", average: 14.0, credits: 60, decision: "Admis" },
+      { studentId: 9, studentName: "Ibrahim Sy", studentMatricule: "ETU-2024-009", average: 9.5, credits: 36, decision: "Ajourné" },
+      { studentId: 22, studentName: "Mialy Andria", studentMatricule: "ETU-2024-022", average: 14.5, credits: 60, decision: "Admis" },
+    ],
+  },
+];
+
+const MockECTSRecords: ECTSRecord[] = [
+  // Amadou Diallo (id 1, CS L3)
+  { studentId: 1, subjectId: 1, subjectName: "Introduction à la Programmation", subjectCode: "CS101", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 1, subjectId: 4, subjectName: "Structures de Données", subjectCode: "CS201", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 1, subjectId: 5, subjectName: "Bases de Données", subjectCode: "CS301", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  // Aina Rasoanirina (id 3, demo student)
+  { studentId: 3, subjectId: 1, subjectName: "Introduction à la Programmation", subjectCode: "CS101", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 3, subjectId: 4, subjectName: "Structures de Données", subjectCode: "CS201", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 3, subjectId: 5, subjectName: "Bases de Données", subjectCode: "CS301", credits: 6, validated: true, semester: "S2", academicYear: "2025-2026" },
+  { studentId: 3, subjectId: 10, subjectName: "Intelligence Artificielle", subjectCode: "CS401", credits: 6, validated: true, semester: "S2", academicYear: "2025-2026" },
+  // Moussa Koné (id 7, CS M1)
+  { studentId: 7, subjectId: 4, subjectName: "Structures de Données", subjectCode: "CS201", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 7, subjectId: 10, subjectName: "Intelligence Artificielle", subjectCode: "CS401", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 7, subjectId: 1, subjectName: "Introduction à la Programmation", subjectCode: "CS101", credits: 6, validated: true, semester: "S1", academicYear: "2024-2025" },
+  // Ibrahim Sy (id 9, Physics L2)
+  { studentId: 9, subjectId: 3, subjectName: "Mécanique Quantique", subjectCode: "PHY301", credits: 6, validated: false, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 9, subjectId: 7, subjectName: "Électromagnétisme", subjectCode: "PHY201", credits: 4, validated: true, semester: "S1", academicYear: "2025-2026" },
+  // Lalao Raharison (id 14, CS L2 - suspended)
+  { studentId: 14, subjectId: 1, subjectName: "Introduction à la Programmation", subjectCode: "CS101", credits: 6, validated: false, semester: "S1", academicYear: "2025-2026" },
+  // Bakary Cissé (id 13, Math M2)
+  { studentId: 13, subjectId: 2, subjectName: "Analyse Mathématique II", subjectCode: "MATH201", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+  { studentId: 13, subjectId: 11, subjectName: "Probabilités et Statistiques", subjectCode: "MATH301", credits: 6, validated: true, semester: "S1", academicYear: "2025-2026" },
+];
+
+export {
+  MockSubjects, MockStudents, MockTeachers, MockSchedule, MockGrades, MockDashboardStats,
+  MockCourses, MockAnnouncements, MockAssignments, MockSubmissions,
+  MockAcademicYears, MockDepartments, MockPrograms, MockGroups, MockAuditLogs,
+  MockRooms, MockMessages, MockExams, MockAdminRequests, MockAttendances,
+  MockResources, MockForumPosts, MockQuizzes, MockQuizAttempts, MockPortfolios,
+  MockJuryDeliberations, MockECTSRecords,
+};

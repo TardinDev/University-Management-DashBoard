@@ -176,3 +176,223 @@ export type DashboardStats = {
   departmentDistribution: { departement: string; students: number; teachers: number }[];
   recentActivity: { id: number; type: string; description: string; date: string; actor: string }[];
 };
+
+export type AcademicYear = {
+  id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+  isCurrent: boolean;
+};
+
+export type Department = {
+  id: number;
+  name: string;
+  code: string;
+  description: string;
+  headId?: number;
+  headName?: string;
+};
+
+export type Program = {
+  id: number;
+  name: string;
+  code: string;
+  departmentId: number;
+  departmentName: string;
+  level: string;
+  description: string;
+};
+
+export type Group = {
+  id: number;
+  name: string;
+  type: "TD" | "TP";
+  courseId: string;
+  courseName: string;
+  professorId: number;
+  professorName: string;
+  students: string[];
+};
+
+export type AuditLog = {
+  id: number;
+  userId: number;
+  userName: string;
+  action: string;
+  resource: string;
+  resourceId: string;
+  details: string;
+  createdAt: string;
+};
+
+export type Room = {
+  id: number;
+  name: string;
+  capacity: number;
+  type: "Amphi" | "Salle" | "Labo";
+  building: string;
+  equipment: string[];
+  status: "Disponible" | "Occupée" | "Maintenance";
+};
+
+export type Message = {
+  id: number;
+  senderId: string;
+  senderName: string;
+  senderRole: string;
+  receiverId: string;
+  receiverName: string;
+  subject: string;
+  content: string;
+  read: boolean;
+  createdAt: string;
+};
+
+export type Exam = {
+  id: number;
+  courseId: string;
+  courseName: string;
+  roomId: number;
+  roomName: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  type: "Partiel" | "Final" | "Rattrapage";
+  semester: "S1" | "S2";
+};
+
+export type AdminRequest = {
+  id: number;
+  studentId: string;
+  studentName: string;
+  studentMatricule: string;
+  type: string;
+  subject: string;
+  description: string;
+  status: "En attente" | "En cours" | "Approuvée" | "Rejetée";
+  response?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Attendance = {
+  id: number;
+  courseId: string;
+  courseName: string;
+  studentId: string;
+  studentName: string;
+  studentMatricule: string;
+  date: string;
+  status: "Présent" | "Absent" | "Retard";
+  sessionType?: "TD" | "TP" | "CM";
+};
+
+export type Resource = {
+  id: number;
+  courseId: string;
+  courseName: string;
+  title: string;
+  description: string;
+  fileUrl: string;
+  fileType: string;
+  uploadedById: string;
+  uploadedByName: string;
+  createdAt: string;
+};
+
+export type ForumPost = {
+  id: number;
+  courseId: string;
+  courseName?: string;
+  authorId: string;
+  authorName: string;
+  authorRole: string;
+  title?: string;
+  content: string;
+  parentId?: number;
+  createdAt: string;
+  replies?: ForumPost[];
+};
+
+export type QuizQuestion = {
+  id: number;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  points: number;
+};
+
+export type Quiz = {
+  id: number;
+  courseId: string;
+  courseName: string;
+  title: string;
+  description: string;
+  questions: QuizQuestion[];
+  dueDate?: string;
+  duration?: number;
+  createdAt: string;
+};
+
+export type QuizAttempt = {
+  id: number;
+  quizId: number;
+  quizTitle: string;
+  studentId: string;
+  studentName: string;
+  answers: number[];
+  score: number;
+  maxScore: number;
+  submittedAt: string;
+};
+
+export type PortfolioItem = {
+  id: number;
+  title: string;
+  description: string;
+  type: "project" | "certificate" | "experience" | "skill";
+  date?: string;
+  url?: string;
+  tags: string[];
+};
+
+export type Portfolio = {
+  id: number;
+  studentId: string;
+  title: string;
+  description: string;
+  items: PortfolioItem[];
+};
+
+export type JuryDecision = {
+  studentId: number;
+  studentName: string;
+  studentMatricule: string;
+  average: number;
+  credits: number;
+  decision: "Admis" | "Ajourné" | "Redoublant" | "Exclu";
+};
+
+export type JuryDeliberation = {
+  id: number;
+  academicYearId: number;
+  academicYearName: string;
+  departmentId: number;
+  departmentName: string;
+  level: string;
+  date: string;
+  status: "Planifié" | "En cours" | "Terminé";
+  decisions: JuryDecision[];
+};
+
+export type ECTSRecord = {
+  studentId: number;
+  subjectId: number;
+  subjectName: string;
+  subjectCode: string;
+  credits: number;
+  validated: boolean;
+  semester: "S1" | "S2";
+  academicYear: string;
+};

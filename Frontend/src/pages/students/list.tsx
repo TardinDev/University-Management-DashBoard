@@ -6,13 +6,15 @@ import { DeleteButton } from "@/components/refine-ui/buttons/delete";
 import { DataTable } from "@/components/refine-ui/data-table/data-table";
 import { Breadcrumb } from "@/components/refine-ui/layout/breadcrumb";
 import { ListView } from "@/components/refine-ui/views/list-view";
+import { CSVImportExport } from "@/components/csv-import-export";
+import { MockStudents } from "@/components/constants/Mock-Data";
 import type { Student } from "@/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTable } from "@refinedev/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { Search, Eye, Pencil, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatedPage } from "@/components/ui/animated-page";
 import { cn } from "@/lib/utils";
@@ -96,13 +98,13 @@ const StudentsList = () => {
         cell: ({ row }) => (
           <div className="flex items-center gap-1">
             <ShowButton resource="students" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Voir</span>
+              <Eye className="h-4 w-4" />
             </ShowButton>
             <EditButton resource="students" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Modifier</span>
+              <Pencil className="h-4 w-4" />
             </EditButton>
             <DeleteButton resource="students" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Supprimer</span>
+              <Trash className="h-4 w-4" />
             </DeleteButton>
           </div>
         ),
@@ -167,6 +169,22 @@ const StudentsList = () => {
 
             <CreateButton resource="students" />
           </div>
+        </div>
+
+        <div className="flex justify-end">
+          <CSVImportExport
+            data={MockStudents as unknown as Record<string, unknown>[]}
+            columns={[
+              { key: "matricule", label: "Matricule" },
+              { key: "firstName", label: "Prenom" },
+              { key: "lastName", label: "Nom" },
+              { key: "email", label: "Email" },
+              { key: "departement", label: "Departement" },
+              { key: "level", label: "Niveau" },
+              { key: "status", label: "Statut" },
+            ]}
+            resourceName="etudiants"
+          />
         </div>
 
         <DataTable table={table} />

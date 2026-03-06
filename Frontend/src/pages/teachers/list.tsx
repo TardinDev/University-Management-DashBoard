@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useTable } from "@refinedev/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { Search, Eye, Pencil, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatedPage } from "@/components/ui/animated-page";
 import { cn } from "@/lib/utils";
@@ -102,13 +102,13 @@ const TeachersList = () => {
         cell: ({ row }) => (
           <div className="flex items-center gap-1">
             <ShowButton resource="teachers" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Voir</span>
+              <Eye className="h-4 w-4" />
             </ShowButton>
             <EditButton resource="teachers" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Modifier</span>
+              <Pencil className="h-4 w-4" />
             </EditButton>
             <DeleteButton resource="teachers" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Supprimer</span>
+              <Trash className="h-4 w-4" />
             </DeleteButton>
           </div>
         ),

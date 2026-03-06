@@ -9,6 +9,23 @@ import {
   MockAnnouncements,
   MockAssignments,
   MockSubmissions,
+  MockAcademicYears,
+  MockDepartments,
+  MockPrograms,
+  MockGroups,
+  MockAuditLogs,
+  MockRooms,
+  MockMessages,
+  MockExams,
+  MockAdminRequests,
+  MockAttendances,
+  MockResources,
+  MockForumPosts,
+  MockQuizzes,
+  MockQuizAttempts,
+  MockPortfolios,
+  MockJuryDeliberations,
+  MockECTSRecords,
 } from "@/components/constants/Mock-Data";
 
 // Deep-clone arrays so mutations don't touch the originals
@@ -27,6 +44,23 @@ const store: Record<string, Record<string, unknown>[]> = {
   announcements: clone(MockAnnouncements),
   assignments: clone(MockAssignments),
   submissions: clone(MockSubmissions),
+  "academic-years": clone(MockAcademicYears),
+  departments: clone(MockDepartments),
+  programs: clone(MockPrograms),
+  groups: clone(MockGroups),
+  "audit-logs": clone(MockAuditLogs),
+  rooms: clone(MockRooms),
+  messages: clone(MockMessages),
+  exams: clone(MockExams),
+  "admin-requests": clone(MockAdminRequests),
+  attendance: clone(MockAttendances),
+  resources: clone(MockResources),
+  "forum-posts": clone(MockForumPosts),
+  quizzes: clone(MockQuizzes),
+  "quiz-attempts": clone(MockQuizAttempts),
+  portfolios: clone(MockPortfolios),
+  "jury-deliberations": clone(MockJuryDeliberations),
+  "ects-records": clone(MockECTSRecords),
 };
 
 let nextId = 1000;
@@ -209,6 +243,51 @@ export const mockDataProvider: DataProvider = {
           /* ignore */
         }
       }
+    }
+
+    if (resource === "messages") {
+      newItem.createdAt = newItem.createdAt || new Date().toISOString();
+      newItem.read = newItem.read ?? false;
+      if (!newItem.senderId) {
+        try {
+          const stored = localStorage.getItem("university_user");
+          if (stored) {
+            const user = JSON.parse(stored);
+            newItem.senderId = user.id;
+            newItem.senderName = `${user.firstName} ${user.lastName}`;
+            newItem.senderRole = user.role;
+          }
+        } catch { /* ignore */ }
+      }
+    }
+
+    if (resource === "admin-requests") {
+      newItem.createdAt = newItem.createdAt || new Date().toISOString();
+      newItem.updatedAt = newItem.updatedAt || new Date().toISOString();
+      newItem.status = newItem.status || "En attente";
+    }
+
+    if (resource === "forum-posts") {
+      newItem.createdAt = newItem.createdAt || new Date().toISOString();
+      if (!newItem.authorId) {
+        try {
+          const stored = localStorage.getItem("university_user");
+          if (stored) {
+            const user = JSON.parse(stored);
+            newItem.authorId = user.id;
+            newItem.authorName = `${user.firstName} ${user.lastName}`;
+            newItem.authorRole = user.role;
+          }
+        } catch { /* ignore */ }
+      }
+    }
+
+    if (resource === "quiz-attempts") {
+      newItem.submittedAt = newItem.submittedAt || new Date().toISOString();
+    }
+
+    if (resource === "resources") {
+      newItem.createdAt = newItem.createdAt || new Date().toISOString();
     }
 
     items.push(newItem);

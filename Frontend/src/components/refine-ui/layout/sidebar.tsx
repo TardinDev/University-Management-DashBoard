@@ -35,9 +35,13 @@ type UserIdentity = { id: string; role: "ADMIN" | "PROFESSOR" | "STUDENT" };
 
 // Resources visible per role
 const ROLE_RESOURCES: Record<string, string[]> = {
-  ADMIN: ["dashboard", "courses", "students", "teachers", "subjects", "schedule", "grades"],
-  PROFESSOR: ["dashboard", "courses"],
-  STUDENT: ["dashboard", "courses"],
+  ADMIN: [
+    "dashboard", "courses", "students", "teachers", "subjects", "schedule", "grades",
+    "academic-years", "departments", "groups", "rooms", "exams",
+    "audit-logs", "messages", "admin-requests", "jury-deliberations", "ects", "emails",
+  ],
+  PROFESSOR: ["dashboard", "courses", "messages", "attendance", "quizzes", "availability"],
+  STUDENT: ["dashboard", "courses", "messages", "admin-requests", "portfolio", "calendar"],
 };
 
 export function Sidebar() {

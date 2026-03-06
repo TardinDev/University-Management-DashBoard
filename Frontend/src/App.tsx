@@ -14,7 +14,13 @@ import { ThemeProvider } from "./components/refine-ui/theme/theme-provider";
 import { dataProvider } from "./providers/data";
 import { authProvider } from "./providers/auth";
 import { Layout } from "./components/refine-ui/layout/layout";
-import { Home, Users, GraduationCap, BookOpen, Calendar, Award, Library } from "lucide-react";
+import {
+  Home, Users, GraduationCap, BookOpen, Calendar, Award, Library,
+  Building2, DoorOpen, Layers, ClipboardList, FileSearch, Mail,
+  MessageSquare, Scale, CreditCard, Briefcase, CalendarDays,
+  CheckSquare, HelpCircle, Clock,
+} from "lucide-react";
+import { lazy, Suspense } from "react";
 
 import DashBoard from "./pages/DashBoard";
 import SubjectsList from "./pages/subjects/list";
@@ -40,43 +46,85 @@ import CoursesCreate from "./pages/courses/create";
 import CoursesShow from "./pages/courses/show";
 import JoinCourse from "./pages/courses/join";
 
+// Lazy-loaded new pages
+const AcademicYearsList = lazy(() => import("./pages/academic-years/list"));
+const AcademicYearsCreate = lazy(() => import("./pages/academic-years/create"));
+const AcademicYearsEdit = lazy(() => import("./pages/academic-years/edit"));
+const DepartmentsList = lazy(() => import("./pages/departments/list"));
+const DepartmentsCreate = lazy(() => import("./pages/departments/create"));
+const DepartmentsShow = lazy(() => import("./pages/departments/show"));
+const GroupsList = lazy(() => import("./pages/groups/list"));
+const GroupsCreate = lazy(() => import("./pages/groups/create"));
+const RoomsList = lazy(() => import("./pages/rooms/list"));
+const RoomsCreate = lazy(() => import("./pages/rooms/create"));
+const RoomsEdit = lazy(() => import("./pages/rooms/edit"));
+const ExamsList = lazy(() => import("./pages/exams/list"));
+const ExamsCreate = lazy(() => import("./pages/exams/create"));
+const AuditLogsList = lazy(() => import("./pages/audit-logs/list"));
+const EmailsPage = lazy(() => import("./pages/emails/index"));
+const ECTSPage = lazy(() => import("./pages/ects/index"));
+const JuryList = lazy(() => import("./pages/jury/list"));
+const JuryShow = lazy(() => import("./pages/jury/show"));
+const AdminRequestsList = lazy(() => import("./pages/admin-requests/list"));
+const AdminRequestsCreate = lazy(() => import("./pages/admin-requests/create"));
+const AdminRequestsShow = lazy(() => import("./pages/admin-requests/show"));
+const AttendancePage = lazy(() => import("./pages/attendance/index"));
+const AttendanceHistory = lazy(() => import("./pages/attendance/history"));
+const QuizzesList = lazy(() => import("./pages/quizzes/list"));
+const QuizzesCreate = lazy(() => import("./pages/quizzes/create"));
+const QuizzesShow = lazy(() => import("./pages/quizzes/show"));
+const QuizTake = lazy(() => import("./pages/quizzes/take"));
+const MessagesPage = lazy(() => import("./pages/messages/index"));
+const CalendarPage = lazy(() => import("./pages/calendar/index"));
+const PortfolioPage = lazy(() => import("./pages/portfolio/index"));
+const AvailabilityPage = lazy(() => import("./pages/availability/index"));
+
+function PageLoader() {
+  return <div className="animate-pulse p-8"><div className="h-8 bg-muted rounded w-1/3 mb-4" /><div className="h-64 bg-muted rounded" /></div>;
+}
+
 const accessControlProvider: AccessControlProvider = {
   can: async ({ resource, action }) => {
-    // Get role from cached identity
     const role = await authProvider.getPermissions?.({} as never);
 
-    // Admin can do everything
     if (role === "ADMIN") return { can: true };
 
-    // Professor: full access to courses, assignments, announcements, submissions
-    // Read-only for students, teachers, subjects
     if (role === "PROFESSOR") {
-      if (["courses", "assignments", "announcements", "submissions"].includes(resource || "")) {
+      if (["courses", "assignments", "announcements", "submissions", "attendance", "quizzes", "resources", "forum-posts", "quiz-attempts", "availability"].includes(resource || "")) {
         return { can: true };
       }
-      if (["dashboard", "schedule"].includes(resource || "")) {
+      if (["dashboard", "schedule", "messages"].includes(resource || "")) {
         return { can: true };
       }
-      // Admin-only resources: limited
       if (["students", "teachers", "subjects", "grades"].includes(resource || "")) {
         if (["list", "show"].includes(action)) return { can: true };
-        return { can: false, reason: "Accès réservé aux administrateurs" };
+        return { can: false, reason: "Acces reserve aux administrateurs" };
       }
     }
 
-    // Student: courses (list/show), submissions (create/show), join
     if (role === "STUDENT") {
-      if (["dashboard", "courses", "schedule"].includes(resource || "")) {
+      if (["dashboard", "courses", "schedule", "calendar", "portfolio"].includes(resource || "")) {
         if (["list", "show"].includes(action)) return { can: true };
         return { can: false };
       }
-      if (resource === "submissions") {
+      if (resource === "submissions" || resource === "quiz-attempts") {
+        if (["list", "show", "create"].includes(action)) return { can: true };
+        return { can: false };
+      }
+      if (resource === "admin-requests") {
+        if (["list", "show", "create"].includes(action)) return { can: true };
+        return { can: false };
+      }
+      if (resource === "messages") {
+        return { can: true };
+      }
+      if (resource === "forum-posts") {
         if (["list", "show", "create"].includes(action)) return { can: true };
         return { can: false };
       }
       if (["students", "teachers", "subjects", "grades", "assignments", "announcements"].includes(resource || "")) {
         if (["list", "show"].includes(action)) return { can: true };
-        return { can: false, reason: "Accès restreint" };
+        return { can: false, reason: "Acces restreint" };
       }
     }
 
@@ -105,20 +153,14 @@ function App() {
                 {
                   name: "dashboard",
                   list: "/",
-                  meta: {
-                    label: "Accueil",
-                    icon: <Home />,
-                  },
+                  meta: { label: "Accueil", icon: <Home /> },
                 },
                 {
                   name: "courses",
                   list: "/courses",
                   create: "/courses/create",
                   show: "/courses/:id",
-                  meta: {
-                    label: "Mes Cours",
-                    icon: <Library />,
-                  },
+                  meta: { label: "Mes Cours", icon: <Library /> },
                 },
                 {
                   name: "students",
@@ -126,10 +168,7 @@ function App() {
                   create: "/students/create",
                   edit: "/students/edit/:id",
                   show: "/students/show/:id",
-                  meta: {
-                    label: "Étudiants",
-                    icon: <Users />,
-                  },
+                  meta: { label: "Etudiants", icon: <Users /> },
                 },
                 {
                   name: "teachers",
@@ -137,10 +176,7 @@ function App() {
                   create: "/teachers/create",
                   edit: "/teachers/edit/:id",
                   show: "/teachers/show/:id",
-                  meta: {
-                    label: "Enseignants",
-                    icon: <GraduationCap />,
-                  },
+                  meta: { label: "Enseignants", icon: <GraduationCap /> },
                 },
                 {
                   name: "subjects",
@@ -148,26 +184,110 @@ function App() {
                   create: "/subjects/create",
                   edit: "/subjects/edit/:id",
                   show: "/subjects/show/:id",
-                  meta: {
-                    label: "Matières",
-                    icon: <BookOpen />,
-                  },
+                  meta: { label: "Matieres", icon: <BookOpen /> },
                 },
                 {
                   name: "schedule",
                   list: "/schedule",
-                  meta: {
-                    label: "Emploi du Temps",
-                    icon: <Calendar />,
-                  },
+                  meta: { label: "Emploi du Temps", icon: <Calendar /> },
                 },
                 {
                   name: "grades",
                   list: "/grades",
-                  meta: {
-                    label: "Notes",
-                    icon: <Award />,
-                  },
+                  meta: { label: "Notes", icon: <Award /> },
+                },
+                {
+                  name: "academic-years",
+                  list: "/academic-years",
+                  create: "/academic-years/create",
+                  edit: "/academic-years/edit/:id",
+                  meta: { label: "Annees Academiques", icon: <CalendarDays /> },
+                },
+                {
+                  name: "departments",
+                  list: "/departments",
+                  create: "/departments/create",
+                  show: "/departments/show/:id",
+                  meta: { label: "Departements", icon: <Building2 /> },
+                },
+                {
+                  name: "groups",
+                  list: "/groups",
+                  create: "/groups/create",
+                  meta: { label: "Groupes TD/TP", icon: <Layers /> },
+                },
+                {
+                  name: "rooms",
+                  list: "/rooms",
+                  create: "/rooms/create",
+                  edit: "/rooms/edit/:id",
+                  meta: { label: "Salles", icon: <DoorOpen /> },
+                },
+                {
+                  name: "exams",
+                  list: "/exams",
+                  create: "/exams/create",
+                  meta: { label: "Examens", icon: <ClipboardList /> },
+                },
+                {
+                  name: "audit-logs",
+                  list: "/audit-logs",
+                  meta: { label: "Journal d'Audit", icon: <FileSearch /> },
+                },
+                {
+                  name: "messages",
+                  list: "/messages",
+                  meta: { label: "Messagerie", icon: <MessageSquare /> },
+                },
+                {
+                  name: "admin-requests",
+                  list: "/admin-requests",
+                  create: "/admin-requests/create",
+                  show: "/admin-requests/show/:id",
+                  meta: { label: "Demandes", icon: <HelpCircle /> },
+                },
+                {
+                  name: "jury-deliberations",
+                  list: "/jury",
+                  show: "/jury/show/:id",
+                  meta: { label: "Jury & Deliberations", icon: <Scale /> },
+                },
+                {
+                  name: "ects",
+                  list: "/ects",
+                  meta: { label: "Credits ECTS", icon: <CreditCard /> },
+                },
+                {
+                  name: "emails",
+                  list: "/emails",
+                  meta: { label: "Emails", icon: <Mail /> },
+                },
+                {
+                  name: "attendance",
+                  list: "/attendance",
+                  meta: { label: "Presences", icon: <CheckSquare /> },
+                },
+                {
+                  name: "quizzes",
+                  list: "/quizzes",
+                  create: "/quizzes/create",
+                  show: "/quizzes/show/:id",
+                  meta: { label: "Quiz / QCM", icon: <HelpCircle /> },
+                },
+                {
+                  name: "calendar",
+                  list: "/calendar",
+                  meta: { label: "Calendrier", icon: <CalendarDays /> },
+                },
+                {
+                  name: "portfolio",
+                  list: "/portfolio",
+                  meta: { label: "Portfolio", icon: <Briefcase /> },
+                },
+                {
+                  name: "availability",
+                  list: "/availability",
+                  meta: { label: "Disponibilités", icon: <Clock /> },
                 },
               ]}
             >
@@ -184,7 +304,9 @@ function App() {
                       fallback={<Navigate to="/login" />}
                     >
                       <Layout>
-                        <Outlet />
+                        <Suspense fallback={<PageLoader />}>
+                          <Outlet />
+                        </Suspense>
                       </Layout>
                     </Authenticated>
                   }
@@ -222,6 +344,67 @@ function App() {
 
                   <Route path="/schedule" element={<SchedulePage />} />
                   <Route path="/grades" element={<GradesPage />} />
+
+                  {/* New routes */}
+                  <Route path="/academic-years">
+                    <Route index element={<AcademicYearsList />} />
+                    <Route path="create" element={<AcademicYearsCreate />} />
+                    <Route path="edit/:id" element={<AcademicYearsEdit />} />
+                  </Route>
+
+                  <Route path="/departments">
+                    <Route index element={<DepartmentsList />} />
+                    <Route path="create" element={<DepartmentsCreate />} />
+                    <Route path="show/:id" element={<DepartmentsShow />} />
+                  </Route>
+
+                  <Route path="/groups">
+                    <Route index element={<GroupsList />} />
+                    <Route path="create" element={<GroupsCreate />} />
+                  </Route>
+
+                  <Route path="/rooms">
+                    <Route index element={<RoomsList />} />
+                    <Route path="create" element={<RoomsCreate />} />
+                    <Route path="edit/:id" element={<RoomsEdit />} />
+                  </Route>
+
+                  <Route path="/exams">
+                    <Route index element={<ExamsList />} />
+                    <Route path="create" element={<ExamsCreate />} />
+                  </Route>
+
+                  <Route path="/audit-logs" element={<AuditLogsList />} />
+                  <Route path="/emails" element={<EmailsPage />} />
+                  <Route path="/ects" element={<ECTSPage />} />
+
+                  <Route path="/jury">
+                    <Route index element={<JuryList />} />
+                    <Route path="show/:id" element={<JuryShow />} />
+                  </Route>
+
+                  <Route path="/admin-requests">
+                    <Route index element={<AdminRequestsList />} />
+                    <Route path="create" element={<AdminRequestsCreate />} />
+                    <Route path="show/:id" element={<AdminRequestsShow />} />
+                  </Route>
+
+                  <Route path="/attendance">
+                    <Route index element={<AttendancePage />} />
+                    <Route path="history" element={<AttendanceHistory />} />
+                  </Route>
+
+                  <Route path="/quizzes">
+                    <Route index element={<QuizzesList />} />
+                    <Route path="create" element={<QuizzesCreate />} />
+                    <Route path="show/:id" element={<QuizzesShow />} />
+                    <Route path="take/:id" element={<QuizTake />} />
+                  </Route>
+
+                  <Route path="/messages" element={<MessagesPage />} />
+                  <Route path="/calendar" element={<CalendarPage />} />
+                  <Route path="/portfolio" element={<PortfolioPage />} />
+                  <Route path="/availability" element={<AvailabilityPage />} />
                 </Route>
 
                 {/* Catch all */}

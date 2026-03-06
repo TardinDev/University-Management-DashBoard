@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { useTable } from "@refinedev/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Search } from "lucide-react";
+import { Search, Eye, Pencil, Trash } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatedPage } from "@/components/ui/animated-page";
 
@@ -64,13 +64,13 @@ const SubjectsList = () => {
         cell: ({ row }) => (
           <div className="flex items-center gap-1">
             <ShowButton resource="subjects" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Voir</span>
+              <Eye className="h-4 w-4" />
             </ShowButton>
             <EditButton resource="subjects" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Modifier</span>
+              <Pencil className="h-4 w-4" />
             </EditButton>
             <DeleteButton resource="subjects" recordItemId={row.original.id} variant="ghost" size="icon">
-              <span className="sr-only">Supprimer</span>
+              <Trash className="h-4 w-4" />
             </DeleteButton>
           </div>
         ),

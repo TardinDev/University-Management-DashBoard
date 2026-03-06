@@ -8,6 +8,7 @@ import { useShow } from "@refinedev/core";
 import type { Student, Grade, ScheduleEvent } from "@/types";
 import { MockGrades, MockSchedule } from "@/components/constants/Mock-Data";
 import { AnimatedPage } from "@/components/ui/animated-page";
+import { TranscriptGenerator } from "@/components/transcript-generator";
 import { cn } from "@/lib/utils";
 
 const statusColors: Record<string, string> = {
@@ -80,6 +81,10 @@ const StudentsShow = () => {
             </div>
           </CardContent>
         </Card>
+
+        {studentGrades.length > 0 && (
+          <TranscriptGenerator student={record} grades={studentGrades} className="mb-4" />
+        )}
 
         <Tabs defaultValue="grades">
           <TabsList>
