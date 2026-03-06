@@ -15,7 +15,8 @@ type AIAction =
   | "generate_request"
   | "generate_portfolio"
   | "generate_description"
-  | "generate_forum";
+  | "generate_forum"
+  | "generate_revision";
 
 interface UseAIAssistReturn {
   result: string | null;

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 
-const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"] as const;
+const DAYS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] as const;
 const HOURS = Array.from({ length: 11 }, (_, i) => i + 8); // 8h to 18h
 
 const dayColors: Record<string, string> = {
@@ -14,6 +14,7 @@ const dayColors: Record<string, string> = {
   "Jeudi": "bg-amber-100 border-amber-300 text-amber-900 dark:bg-amber-900/40 dark:border-amber-700 dark:text-amber-100",
   "Vendredi": "bg-rose-100 border-rose-300 text-rose-900 dark:bg-rose-900/40 dark:border-rose-700 dark:text-rose-100",
   "Samedi": "bg-cyan-100 border-cyan-300 text-cyan-900 dark:bg-cyan-900/40 dark:border-cyan-700 dark:text-cyan-100",
+  "Dimanche": "",
 };
 
 function parseTime(time: string): number {
@@ -31,13 +32,14 @@ export function WeeklyCalendar({ events }: WeeklyCalendarProps) {
   return (
     <>
       <div className="overflow-x-auto">
-        <div className="min-w-[800px]">
+        <div className="min-w-[900px]">
           {/* Header row */}
-          <div className="grid grid-cols-[80px_repeat(6,1fr)] border-b">
+          <div className="grid grid-cols-[80px_repeat(7,1fr)] border-b">
             <div className="p-2 text-sm font-medium text-muted-foreground" />
             {DAYS.map((day) => (
-              <div key={day} className="p-2 text-center text-sm font-semibold border-l">
+              <div key={day} className={cn("p-2 text-center text-sm font-semibold border-l", day === "Dimanche" && "bg-muted/50 text-muted-foreground")}>
                 {day}
+                {day === "Dimanche" && <span className="block text-[10px] font-normal">Repos</span>}
               </div>
             ))}
           </div>
@@ -45,12 +47,12 @@ export function WeeklyCalendar({ events }: WeeklyCalendarProps) {
           {/* Time slots */}
           <div className="relative">
             {HOURS.map((hour) => (
-              <div key={hour} className="grid grid-cols-[80px_repeat(6,1fr)] border-b" style={{ height: "60px" }}>
+              <div key={hour} className="grid grid-cols-[80px_repeat(7,1fr)] border-b" style={{ height: "60px" }}>
                 <div className="p-2 text-xs text-muted-foreground text-right pr-3 -translate-y-2">
                   {hour}:00
                 </div>
                 {DAYS.map((day) => (
-                  <div key={`${day}-${hour}`} className="border-l relative" />
+                  <div key={`${day}-${hour}`} className={cn("border-l relative", day === "Dimanche" && "bg-muted/30")} />
                 ))}
               </div>
             ))}
@@ -64,7 +66,7 @@ export function WeeklyCalendar({ events }: WeeklyCalendarProps) {
               const endHour = parseTime(event.endTime);
               const top = (startHour - 8) * 60;
               const height = (endHour - startHour) * 60;
-              const colWidth = `calc((100% - 80px) / 6)`;
+              const colWidth = `calc((100% - 80px) / 7)`;
               const left = `calc(80px + ${dayIndex} * ${colWidth})`;
 
               return (

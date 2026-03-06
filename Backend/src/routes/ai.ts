@@ -15,9 +15,18 @@ type AIAction =
   | "generate_request"
   | "generate_portfolio"
   | "generate_description"
-  | "generate_forum";
+  | "generate_forum"
+  | "generate_revision";
 
-function buildSystemPrompt(): string {
+function buildSystemPrompt(action?: AIAction): string {
+  if (action === "generate_revision") {
+    return `Tu es un tuteur universitaire expert et pédagogue.
+Tu aides les étudiants à réviser leurs cours de manière structurée et efficace.
+Fournis des explications claires, des points clés, des exemples concrets et des questions d'auto-évaluation.
+Utilise des titres, des listes à puces et une structure bien organisée pour faciliter la lecture.
+Réponds toujours en français.`;
+  }
+
   return `Tu es un assistant d'écriture intégré dans un dashboard universitaire.
 Tu aides les utilisateurs (étudiants, professeurs, administrateurs) à rédiger et améliorer leurs textes.
 Réponds UNIQUEMENT avec le texte amélioré/généré, sans commentaires ni explications.
@@ -42,6 +51,14 @@ function buildUserPrompt(action: AIAction, text: string, context?: string): stri
     generate_portfolio: `Génère une description de projet/compétence pour un portfolio étudiant${contextLabel}:\n\n${text || "Description de projet étudiant"}`,
     generate_description: `Génère une description détaillée et claire${contextLabel}:\n\n${text || "Description pour un contexte universitaire"}`,
     generate_forum: `Génère un message de discussion pour un forum de cours${contextLabel}:\n\n${text || "Message de forum universitaire"}`,
+    generate_revision: `Génère une fiche de révision complète et structurée pour le cours suivant. Inclus :
+- Un résumé des concepts clés
+- Les définitions importantes
+- Des exemples concrets
+- 3 à 5 questions d'auto-évaluation avec réponses
+- Des conseils de révision
+
+Cours à réviser${contextLabel}:\n\n${text}`,
   };
 
   return prompts[action] || prompts.improve;
@@ -75,8 +92,8 @@ router.post("/assist", async (req, res) => {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-5-20250929",
-        max_tokens: 1024,
-        system: buildSystemPrompt(),
+        max_tokens: action === "generate_revision" ? 2048 : 1024,
+        system: buildSystemPrompt(action),
         messages: [
           {
             role: "user",
