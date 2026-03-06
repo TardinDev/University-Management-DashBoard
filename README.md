@@ -1,6 +1,8 @@
 # University Management Dashboard
 
-Tableau de bord de gestion universitaire complet avec interface Google Classroom-like, gestion des cours, devoirs, messagerie, et assistant IA integre.
+Tableau de bord de gestion universitaire complet avec interface Google Classroom-like, gestion des cours, devoirs, messagerie, et **intelligence artificielle integree** (Claude, Anthropic).
+
+L'IA est presente a travers toute l'application : assistant d'ecriture inline dans les textareas (amelioration, generation, traduction, formalisation), revision de cours interactive pour les etudiants avec generation de fiches structurees, et actions contextuelles adaptees au role de l'utilisateur.
 
 ## Stack technique
 
@@ -70,15 +72,21 @@ L'application demarre sur `http://localhost:5173`.
 
 ### Par role
 
-- **Admin** : Gestion des etudiants, enseignants, departements, matieres, emploi du temps, notes, messagerie, demandes administratives
-- **Professeur** : Cours (creation, annonces, devoirs, ressources, forum, notation), quiz, messagerie
-- **Etudiant** : Cours (rejoindre par code, soumissions), portfolio, demandes administratives, messagerie
+- **Admin** : Gestion des etudiants, enseignants, departements, matieres, emploi du temps, notes, messagerie, demandes administratives — **IA : redaction d'emails, reponses aux demandes**
+- **Professeur** : Cours (creation, annonces, devoirs, ressources, forum, notation), quiz, messagerie — **IA : generation de quiz, annonces, descriptions de devoirs**
+- **Etudiant** : Cours (rejoindre par code, soumissions), portfolio, demandes administratives, messagerie — **IA : revision de cours, generation de fiches, redaction de demandes et portfolio**
 
-### Assistant IA inline
+---
 
-Un assistant d'ecriture IA est integre directement dans les champs texte de l'application. Un bouton "baguette magique" apparait au survol de chaque textarea concerne, ouvrant un popover avec des actions contextuelles :
+## Intelligence Artificielle (Claude, Anthropic)
 
-| Page                 | Contexte        | Actions disponibles                                    |
+L'IA est un pilier central de l'application. Elle intervient a deux niveaux :
+
+### 1. Assistant d'ecriture inline
+
+Chaque champ texte de l'application dispose d'un bouton "baguette magique" (visible au survol). Un clic ouvre un popover avec des **actions contextuelles adaptees a la page** :
+
+| Page                 | Contexte        | Actions IA                                             |
 |----------------------|-----------------|--------------------------------------------------------|
 | Messagerie (admin)   | `email`         | Ameliorer, Ton formel, Generer email, Traduire EN, Developper |
 | Annonces de cours    | `announcement`  | Ameliorer, Generer annonce, Ton formel, Simplifier     |
@@ -91,13 +99,29 @@ Un assistant d'ecriture IA est integre directement dans les champs texte de l'ap
 | Messages             | `message`       | Ameliorer, Ton formel, Simplifier, Traduire EN         |
 | Ressources           | `resource`      | Generer description, Ameliorer                         |
 
-**Architecture :**
+Le resultat IA s'affiche dans le popover avec deux options : **Appliquer** (remplace le texte) ou **Inserer** (ajoute a la suite).
+
+### 2. Revision de cours interactive (etudiants)
+
+Sur la page **Emploi du temps**, les etudiants disposent d'une section dediee permettant de :
+- Selectionner un cours parmi ceux affiches dans le planning
+- Generer en un clic une **fiche de revision structuree** contenant :
+  - Resume des concepts cles
+  - Definitions importantes
+  - Exemples concrets
+  - Questions d'auto-evaluation avec reponses
+  - Conseils de revision
+
+### Architecture IA
 
 ```
-Frontend (AITextHelper) --> POST /ai/assist --> Backend proxy --> API Claude (Anthropic)
+Frontend (AITextHelper / useAIAssist) --> POST /ai/assist --> Backend proxy --> API Claude (Anthropic)
 ```
 
-La cle API est stockee cote serveur uniquement. Le composant `AITextHelper` remplace les `<Textarea>` standard et propose les actions filtrees par contexte.
+- La cle API Anthropic est stockee **cote serveur uniquement** (securite)
+- Le composant `AITextHelper` remplace les `<Textarea>` standard avec IA integree
+- Le hook `useAIAssist` est reutilisable pour tout appel IA dans l'application
+- Modele utilise : **Claude Sonnet 4.5** (`claude-sonnet-4-5-20250929`)
 
 ## API Backend
 
